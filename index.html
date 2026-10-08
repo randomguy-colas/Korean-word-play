@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#3b5bdb"><link rel="apple-touch-icon" href="icon-192.png"><title>Korean Word Practice – KIIP 3</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mu:#6b7385;--ac:#3b5bdb;--ok:#2f9e44;--no:#e8590c;--bd:#e3e6ef}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1c212c;--tx:#eef0f6;--mu:#98a0b3;--ac:#748ffc;--ok:#51cf66;--no:#ff922b;--bd:#2c3342}}
+:root[data-theme="dark"]{--bg:#12151c;--card:#1c212c;--tx:#eef0f6;--mu:#98a0b3;--ac:#748ffc;--ok:#51cf66;--no:#ff922b;--bd:#2c3342}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Noto Sans KR","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}
+main{max-width:640px;margin:0 auto;padding:14px}
+h1{font-size:19px;margin:4px 0 10px}
+nav{display:flex;gap:6px;margin-bottom:12px}
+nav button{flex:1;padding:10px 4px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font-size:14px;font-weight:600}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;margin-bottom:12px}
+.ko{font-size:42px;font-weight:700;text-align:center;margin:8px 0}
+.row{display:flex;gap:8px;align-items:center;justify-content:center}
+.sp{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:50%;width:40px;height:40px;font-size:18px;flex:none}
+.big{width:100%;padding:13px;border:0;border-radius:12px;font-size:16px;font-weight:700;color:#fff;background:var(--ac)}
+.big.ok{background:var(--ok)}.big.no{background:var(--no)}
+.mean{text-align:center;margin:12px 0}.mean .en{font-size:20px;font-weight:600}.mean .ne{font-size:20px;color:var(--ac);margin-top:4px}
+.mu{color:var(--mu);font-size:13px;text-align:center}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}.stats b{display:block;font-size:24px}
+.w{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--bd)}
+.w input{width:22px;height:22px;flex:none}.w .k{font-weight:700;font-size:18px;min-width:84px}.w .m{flex:1;font-size:14px}.w .m span{color:var(--ac)}
+input[type=text],select,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit;margin-bottom:8px}
+.sm{padding:9px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font-size:13px}
+.set{display:flex;align-items:center;gap:8px;font-size:13px;margin:6px 0}.set .bar{flex:1}
+.hide{display:none}
+nav button{font-size:13px;padding:10px 2px}
+.relbox{margin-top:12px;padding-top:10px;border-top:1px dashed var(--bd);font-size:13px}.rl{margin:6px 0}.rl b{display:block;color:var(--mu);font-size:12px}.chip{display:inline-block;margin:3px 4px 0 0;padding:4px 9px;border:1px solid var(--bd);border-radius:14px;background:var(--bg);font-size:15px}.chip small{color:var(--mu);font-size:11px}
+</style></head><body><main>
+<h1>🇰🇷 Korean Word Practice · KIIP 3 / TOPIK II</h1>
+<nav><button data-t="learn" class="on">Practice</button><button data-t="list">Words</button><button data-t="rel">Related</button><button data-t="stats">Analyze</button><button data-t="add">Add</button></nav>
+
+<p class="mu" id="vn" style="min-height:20px"></p>
+<section id="learn"></section>
+<section id="list" class="hide"></section>
+<section id="rel" class="hide"></section>
+<section id="stats" class="hide"></section>
+<section id="add" class="hide">
+ <div class="card"><b>Add your own words</b><p class="mu" style="text-align:left">One word per line:<br>한국어 | English | नेपाली</p>
+ <textarea id="ta" rows="6" placeholder="회의 | meeting | बैठक"></textarea>
+ <button class="big" id="addbtn">Add words</button><p class="mu" id="addmsg"></p></div>
+ <div class="card"><button class="sm" id="reset">Reset all progress</button></div>
+ <div class="card"><b>Backup / restore progress</b><p class="mu" style="text-align:left">Tap Show backup, copy the text, and keep it safe (notes, WhatsApp). Paste it here later and tap Restore.</p><textarea id="bk" rows="4"></textarea><div class="row"><button class="sm" id="bkshow">Show backup</button><button class="sm" id="bkcopy">Copy</button><button class="sm" id="bkrest">Restore</button></div><p class="mu" id="bkmsg"></p></div>
+</section>
+
+<script>
+var BASE=`가격|price|मूल्य
+경험|experience|अनुभव
+계획|plan|योजना
+고민|worry, concern|चिन्ता
+공연|performance, show|प्रदर्शन
+관심|interest, attention|रुचि
+교통|traffic, transportation|यातायात
+구하다|to look for, to find|खोज्नु
+국적|nationality|राष्ट्रियता
+규칙|rule|नियम
+기간|period of time|अवधि
+기회|opportunity, chance|अवसर
+깨끗하다|to be clean|सफा हुनु
+꿈|dream|सपना
+나누다|to share, to divide|बाँड्नु
+날씨|weather|मौसम
+노력|effort|प्रयास
+놀라다|to be surprised|छक्क पर्नु
+늘다|to increase, to improve|बढ्नु
+다르다|to be different|फरक हुनु
+다치다|to get hurt|चोट लाग्नु
+담당|being in charge|जिम्मेवारी लिनु
+대답|answer, reply|जवाफ
+도착하다|to arrive|पुग्नु
+돌아가다|to go back, to return|फर्किनु
+동료|colleague|सहकर्मी
+따르다|to follow|पछ्याउनु
+떠나다|to leave|छोड्नु, प्रस्थान गर्नु
+마음|heart, mind|मन
+막히다|to be blocked, to be stuck|अवरुद्ध हुनु
+만족|satisfaction|सन्तुष्टि
+맡기다|to entrust, to leave in someone's care|सुम्पनु
+모으다|to gather, to save up|जम्मा गर्नु
+모임|gathering, meeting|भेला
+무섭다|to be scary, to be afraid|डरलाग्नु
+문화|culture|संस्कृति
+미리|in advance|पहिले नै
+바꾸다|to change, to exchange|बदल्नु
+반드시|without fail, surely|अवश्य
+발표|presentation, announcement|प्रस्तुति
+방법|method, way|तरिका
+배달|delivery|डेलिभरी
+번역|translation|अनुवाद
+보관|storage, safekeeping|भण्डारण
+보험|insurance|बीमा
+복잡하다|to be complicated, crowded|जटिल हुनु, भीडभाड हुनु
+부담|burden, pressure|बोझ
+분위기|atmosphere, mood|माहोल
+불편하다|to be inconvenient, uncomfortable|असुविधाजनक हुनु
+비용|cost, expense|खर्च
+사정|circumstances, situation|परिस्थिति
+상담|consultation, counseling|परामर्श
+생활|daily life, living|जीवन
+서두르다|to hurry|हतार गर्नु
+성격|personality|स्वभाव
+성공|success|सफलता
+소개|introduction|परिचय
+소식|news|समाचार
+수업|class, lesson|कक्षा
+습관|habit|बानी
+신청|application, request|आवेदन
+실수|mistake|गल्ती
+싸우다|to fight, to quarrel|झगडा गर्नु
+안전|safety|सुरक्षा
+약속|promise, appointment|वाचा, भेट्ने समय
+어울리다|to suit, to go well with|सुहाउनु
+얻다|to get, to obtain|प्राप्त गर्नु
+역할|role|भूमिका
+연락|contact|सम्पर्क
+영수증|receipt|रसिद
+예약|reservation|आरक्षण
+예정|plan, scheduled|तय भएको कार्यक्रम
+오해|misunderstanding|गलतफहमी
+외국인|foreigner|विदेशी
+요금|fee, fare|शुल्क
+운동|exercise|व्यायाम
+원인|cause|कारण
+위험|danger|खतरा
+유명하다|to be famous|प्रसिद्ध हुनु
+이웃|neighbor|छिमेकी
+이해|understanding|बुझाइ
+인상|impression|प्रभाव
+일정|schedule|तालिका
+입학|entering a school|भर्ना
+자격|qualification|योग्यता
+자랑|pride, boasting|गर्व
+잠시|for a moment|केही क्षण
+장점|strength, merit|राम्रो पक्ष
+적응|adaptation|अनुकूलन
+전통|tradition|परम्परा
+정리|organizing, tidying up|व्यवस्थित गर्नु
+정보|information|जानकारी
+제출|submission|बुझाउनु
+조건|condition, requirement|सर्त
+주민|resident|बासिन्दा
+준비|preparation|तयारी
+중요하다|to be important|महत्त्वपूर्ण हुनु
+지원|support; application|सहयोग; आवेदन
+직업|occupation|पेशा
+진행|proceeding, progress|सञ्चालन
+질문|question|प्रश्न
+차이|difference|फरक
+참가|participation|सहभागिता
+책임|responsibility|जिम्मेवारी
+체험|hands-on experience|प्रत्यक्ष अनुभव
+추천|recommendation|सिफारिस
+출발|departure|प्रस्थान
+충분하다|to be enough|पर्याप्त हुनु
+취직|getting a job|जागिर पाउनु
+친절하다|to be kind|मायालु हुनु
+퇴근|leaving work|काम सकेर घर जानु
+특별하다|to be special|विशेष हुनु
+편리하다|to be convenient|सुविधाजनक हुनु
+피곤하다|to be tired|थकित हुनु
+필요|need|आवश्यकता
+해결|solution, resolving|समाधान
+행사|event|कार्यक्रम
+환경|environment|वातावरण
+확인|confirmation, checking|पुष्टि
+후회|regret|पछुतो
+힘들다|to be hard, to be tiring|गाह्रो हुनु
+체류|stay, residence|बसाइ
+외국인등록증|alien registration card|विदेशी दर्ता कार्ड
+귀화|naturalization|नागरिकता प्राप्ति
+사회통합|social integration|सामाजिक एकीकरण
+비자|visa|भिसा
+연장|extension|म्याद थप
+임금|wages|ज्याला
+계약|contract|सम्झौता
+근무|work, duty|काम गर्नु
+휴가|vacation, leave|बिदा
+연락하다|to contact|सम्पर्क गर्नु
+거절하다|to refuse, to decline|अस्वीकार गर्नु
+허락하다|to permit, to allow|अनुमति दिनु
+포기하다|to give up|हार मान्नु, प्रयास छोड्नु
+참다|to endure, to hold back|सहनु, थाम्नु
+견디다|to withstand, to bear|सहनु, टिकिरहनु
+이루다|to achieve, to accomplish|हासिल गर्नु, पूरा गर्नु
+단순하다|to be simple, plain|सरल हुनु
+정확하다|to be accurate, exact|सही हुनु, यथार्थ हुनु
+분명하다|to be clear, certain|स्पष्ट हुनु
+흔하다|to be common|सामान्य हुनु, धेरै पाइने हुनु
+적당하다|to be appropriate, moderate|उपयुक्त हुनु
+대단하다|to be impressive, great|उल्लेखनीय हुनु, अद्भुत हुनु
+엄청나다|to be enormous, tremendous|विशाल हुनु, अत्यधिक हुनु
+간단하다|to be simple, brief|छोटो र सरल हुनु
+꾸준하다|to be steady, consistent|निरन्तर हुनु
+자연스럽다|to be natural|स्वाभाविक हुनु
+가능하다|to be possible|सम्भव हुनु
+불가능하다|to be impossible|असम्भव हुनु
+부모|parents|आमाबुबा
+형제|brothers, siblings|दाजुभाइ
+자매|sisters|दिदीबहिनी
+조부모|grandparents|हजुरबुबा र हजुरआमा
+친척|relative|नातेदार
+남편|husband|श्रीमान्
+아내|wife|श्रीमती
+결혼|marriage|विवाह
+이혼|divorce|सम्बन्धविच्छेद
+임신|pregnancy|गर्भावस्था
+출산|childbirth|प्रसव
+자녀|children|सन्तान
+막내|youngest child|कान्छो सन्तान
+가정|home, household|घरपरिवार
+세대|generation|पुस्ता
+돌보다|to take care of|हेरचाह गर्नु
+키우다|to raise, to grow|हुर्काउनु
+닮다|to resemble|उस्तै देखिनु
+재료|ingredient|सामग्री
+양념|seasoning|मसला
+국물|broth, soup liquid|झोल
+반찬|side dish|साइड डिस
+간장|soy sauce|सोया सस
+고추장|red pepper paste|रातो खुर्सानीको पेस्ट
+삶다|to boil (food in water)|उसिन्नु
+끓이다|to boil (a liquid)|उमाल्नु
+볶다|to stir-fry|भुट्नु
+굽다|to grill, to bake|पोल्नु
+튀기다|to deep-fry|तल्नु
+썰다|to slice, to chop|काट्नु
+섞다|to mix|मिसाउनु
+싱겁다|to be bland|फिक्का हुनु
+짜다|to be salty|नुनिलो हुनु
+맵다|to be spicy|पिरो हुनु
+신선하다|to be fresh|ताजा हुनु
+상하다|to spoil, to go bad|बिग्रनु
+영양|nutrition|पोषण
+조리|cooking|खाना पकाउने काम
+기관|institution|संस्था
+관공서|government office|सरकारी कार्यालय
+출입국|immigration (entry and exit)|आप्रवासन
+민원|civil complaint, public service request|नागरिक सेवा अनुरोध
+서류|documents|कागजात
+발급|issuance|जारी गर्नु
+증명서|certificate|प्रमाणपत्र
+등록|registration|दर्ता
+접수|receiving an application|आवेदन बुझ्नु
+처리|handling, processing|प्रक्रिया गर्नु
+수수료|service fee|सेवा शुल्क
+번호표|number ticket|नम्बर टिकट
+창구|service counter|काउन्टर
+주민센터|community service center|समुदाय सेवा केन्द्र
+우체국|post office|हुलाक कार्यालय
+은행|bank|बैंक
+통장|bankbook, bank account|बैंक खाता पुस्तिका
+송금|sending money|रकम पठाउनु
+세금|tax|कर
+납부|payment (of tax, bills)|तिर्नु
+주소|address|ठेगाना
+경찰서|police station|प्रहरी कार्यालय
+신분증|ID card|परिचयपत्र
+여권|passport|राहदानी
+허가|permission, license|अनुमति
+기한|deadline|म्याद
+긍정적|positive|सकारात्मक
+부정적|negative|नकारात्मक
+적극적|active, proactive|सक्रिय
+소극적|passive, reserved|निष्क्रिय
+외향적|extroverted|बहिर्मुखी
+내성적|introverted|अन्तर्मुखी
+꼼꼼하다|to be meticulous, careful|सावधानीपूर्वक काम गर्ने हुनु
+게으르다|to be lazy|अल्छी हुनु
+부지런하다|to be diligent|मेहनती हुनु
+솔직하다|to be honest, frank|स्पष्टवादी हुनु
+성실하다|to be sincere, hardworking|इमानदार र मेहनती हुनु
+예의|manners, courtesy|शिष्टाचार
+배려|consideration for others|अरूको ख्याल राख्नु
+고집|stubbornness|जिद्दी
+급하다|to be hasty, urgent|हतारिलो हुनु
+느긋하다|to be relaxed, easygoing|निश्चिन्त हुनु
+조용하다|to be quiet|शान्त हुनु
+활발하다|to be lively, active|चञ्चल हुनु
+겸손하다|to be modest, humble|विनम्र हुनु
+예민하다|to be sensitive|संवेदनशील हुनु
+이사|moving house|घर सर्नु
+월세|monthly rent|मासिक भाडा
+전세|jeonse (large lump-sum deposit lease)|ठूलो रकम धरौटी राखेर भाडामा लिने कोरियाली प्रणाली
+보증금|deposit|धरौटी
+집주인|landlord|घरधनी
+세입자|tenant|भाडामा बस्ने व्यक्ति
+부동산|real estate, real estate agency|घरजग्गा
+거실|living room|बैठक कोठा
+주방|kitchen|भान्सा
+욕실|bathroom|नुहाउने कोठा
+현관|entrance, front door|मूल ढोका
+관리비|maintenance fee|व्यवस्थापन शुल्क
+이불|blanket, bedding|ओछ्यानमा ओढ्ने कम्बल
+가구|furniture|फर्निचर
+청소|cleaning|सफाइ
+빨래|laundry|धुने लुगा
+설거지|washing dishes|भाँडा माझ्नु
+쓰레기|trash|फोहोर
+분리수거|sorting recyclables|फोहोर छुट्याउनु
+소음|noise|आवाज, हल्ला
+난방|heating|तताउने प्रणाली
+계약서|contract document|सम्झौतापत्र
+소비|consumption, spending|उपभोग
+절약|saving, economizing|बचत, किफायत
+낭비|waste|बर्बादी
+할인|discount|छुट
+쿠폰|coupon|कुपन
+현금|cash|नगद
+할부|installment payment|किस्ता
+결제|payment|भुक्तानी
+환불|refund|रकम फिर्ता
+교환|exchange|साट्नु
+저렴하다|to be cheap|सस्तो हुनु
+비싸다|to be expensive|महँगो हुनु
+충동구매|impulse buying|अचानक किन्नु
+예산|budget|बजेट
+저축|saving (money)|रकम जम्मा गर्नु
+지출|expenditure|खर्च
+수입|income|आम्दानी
+용돈|allowance, pocket money|पकेट मनी
+물가|prices, cost of living|वस्तुको भाउ
+알뜰하다|to be thrifty|किफायती हुनु
+아끼다|to save, to use sparingly|किफायत गर्नु
+중고|second-hand|पुरानो प्रयोग भएको
+축제|festival|उत्सव
+명절|traditional holiday|परम्परागत चाडपर्व
+설날|Lunar New Year|कोरियाली चन्द्र नयाँ वर्ष
+추석|Chuseok (harvest festival)|चुसोक, कोरियाली फसल चाड
+세배|New Year bow|नयाँ वर्षमा गरिने ढोग
+송편|songpyeon (rice cake)|चुसोकमा खाइने चामलको मिठाई
+윷놀이|yutnori (traditional game)|युतनोरी, कोरियाली परम्परागत खेल
+한복|hanbok|हानबोक, कोरियाली परम्परागत पोशाक
+풍습|custom|चलन
+기념일|anniversary, commemoration day|सम्झना दिवस
+개막|opening|उद्घाटन
+폐막|closing|समापन
+참석|attendance|उपस्थिति
+초대|invitation|निम्तो
+축하|congratulations|बधाई
+불꽃놀이|fireworks|आतिशबाजी
+전시|exhibition|प्रदर्शनी
+공휴일|public holiday|सार्वजनिक बिदा
+조상|ancestor|पुर्खा
+성묘|visiting ancestors' graves|पुर्खाको चिहान भ्रमण
+고장|breakdown, malfunction|बिग्रनु
+수리|repair|मर्मत
+점검|inspection|जाँच
+교체|replacement|बदल्नु
+부품|part, component|पार्ट्स
+작동|operation, working|चल्नु
+멈추다|to stop|रोकिनु
+꺼지다|to go off, to turn off|निभ्नु
+켜지다|to come on, to turn on|बल्नु
+새다|to leak|चुहिनु
+깨지다|to break, to shatter|फुट्नु
+부서지다|to break apart|भाँचिनु
+고치다|to fix|मर्मत गर्नु
+서비스센터|service center|सेवा केन्द्र
+보증|warranty, guarantee|ग्यारेन्टी
+무상|free of charge|निःशुल्क
+유상|paid, for a fee|शुल्कसहित
+방문|visit|भ्रमण
+불량|defect, faulty|खराब, त्रुटिपूर्ण
+증상|symptom|लक्षण
+배터리|battery|ब्याट्री
+충전|charging|चार्ज गर्नु
+연결|connection|जडान
+전기|electricity|बिजुली
+에어컨|air conditioner|एयर कन्डिसनर
+감상|appreciation (of art, music)|रसास्वादन
+관객|audience|दर्शक
+배우|actor|कलाकार
+감독|director|निर्देशक
+연극|play (theater)|नाटक
+뮤지컬|musical|म्युजिकल
+콘서트|concert|कन्सर्ट
+미술관|art museum|कला संग्रहालय
+박물관|museum|संग्रहालय
+작품|work (of art)|कृति
+감동|deep emotion, being moved|भावुक पार्ने प्रभाव
+줄거리|plot, storyline|कथानक
+주인공|main character|मुख्य पात्र
+장르|genre|विधा
+관람|viewing, watching|हेर्नु
+매진|sold out|टिकट सकिनु
+예매|advance booking|अग्रिम टिकट बुकिङ
+좌석|seat|सिट
+무대|stage|मञ्च
+박수|applause|ताली
+인기|popularity|लोकप्रियता
+후기|review, impressions after|प्रतिक्रिया
+평가|evaluation|मूल्याङ्कन
+지루하다|to be boring|उबाउ हुनु
+웃기다|to be funny|हास्यास्पद हुनु
+슬프다|to be sad|दुःखी हुनु
+구직|job seeking|जागिर खोज्नु
+채용|hiring, recruitment|भर्ती
+면접|interview|अन्तर्वार्ता
+이력서|résumé|बायोडाटा
+자기소개서|cover letter, self-introduction essay|आत्म-परिचय पत्र
+지원자|applicant|आवेदक
+합격|passing (an exam or interview)|उत्तीर्ण
+불합격|failing, not being selected|अनुत्तीर्ण
+경력|career experience|कार्य अनुभव
+월급|monthly salary|मासिक तलब
+급여|pay, wages|तलब
+연봉|annual salary|वार्षिक तलब
+근로자|worker|श्रमिक
+회사원|office worker|कम्पनी कर्मचारी
+정규직|permanent employee|स्थायी कर्मचारी
+계약직|contract employee|करार कर्मचारी
+아르바이트|part-time job|पार्ट-टाइम काम
+야근|overtime work at night|राति ओभरटाइम
+출근|going to work|काम जानु
+승진|promotion|पदोन्नति
+퇴사|resigning from a company|कम्पनी छोड्नु
+해고|dismissal|जागिरबाट निकाल्नु
+복지|welfare, benefits|सुविधा
+부서|department|विभाग
+상사|boss, superior|माथिल्लो अधिकारी
+신입|new employee|नयाँ कर्मचारी
+인턴|intern|इन्टर्न
+업무|work duties|कार्यभार
+직장|workplace|कार्यस्थल
+근로계약서|labor contract|श्रम सम्झौतापत्र
+고용|employment|रोजगारी
+실업|unemployment|बेरोजगारी
+건강|health|स्वास्थ्य
+병|illness, disease|रोग
+약|medicine|औषधि
+약국|pharmacy|औषधि पसल
+진료|medical examination and treatment|उपचार र जाँच
+처방|prescription|प्रेस्क्रिप्शन
+주사|injection|सुई
+수술|surgery|शल्यक्रिया
+입원|hospital admission|अस्पताल भर्ना
+퇴원|hospital discharge|अस्पतालबाट डिस्चार्ज
+검사|test, examination|जाँच
+감기|cold|रुघाखोकी
+열|fever|ज्वरो
+기침|cough|खोकी
+두통|headache|टाउको दुखाइ
+통증|pain|दुखाइ
+알레르기|allergy|एलर्जी
+예방|prevention|रोकथाम
+회복|recovery|स्वास्थ्य लाभ
+치료|treatment|उपचार
+응급실|emergency room|आपतकालीन कक्ष
+구급차|ambulance|एम्बुलेन्स
+건강보험|health insurance|स्वास्थ्य बीमा
+부작용|side effect|साइड इफेक्ट
+피부|skin|छाला
+소화|digestion|पाचन
+휴식|rest|आराम
+스트레스|stress|तनाव
+대중교통|public transportation|सार्वजनिक यातायात
+지하철|subway|मेट्रो
+환승|transfer (between lines)|गाडी साट्नु
+정류장|bus stop|बस स्टप
+교통카드|transportation card|यातायात कार्ड
+승차|boarding|गाडीमा चढ्नु
+하차|getting off|गाडीबाट ओर्लनु
+운전|driving|गाडी चलाउनु
+면허|license|इजाजतपत्र
+신호등|traffic light|ट्राफिक बत्ती
+횡단보도|crosswalk|पैदल यात्रीले बाटो काट्ने ठाउँ
+주차|parking|पार्किङ
+사고|accident|दुर्घटना
+속도|speed|गति
+지연|delay|ढिलाइ
+노선|route, line|मार्ग
+목적지|destination|गन्तव्य
+거리|street; distance|सडक; दूरी
+길|road, way|बाटो
+왕복|round trip|आउने-जाने
+편도|one-way|एकतर्फी
+승객|passenger|यात्रु
+항공권|plane ticket|हवाई टिकट
+공항|airport|विमानस्थल
+도로|road|सडक
+건너다|to cross|पार गर्नु
+갈아타다|to transfer, to change vehicles|गाडी साट्नु
+내리다|to get off; to fall (rain)|ओर्लनु; खस्नु
+타다|to ride, to get on|चढ्नु
+교육|education|शिक्षा
+학습|learning|सिकाइ
+숙제|homework|गृहकार्य
+시험|exam|परीक्षा
+성적|grades, results|नतिजा
+졸업|graduation|पढाइ पूरा गर्नु
+전공|major (field of study)|मुख्य विषय
+과목|school subject|विषय
+장학금|scholarship|छात्रवृत्ति
+등록금|tuition fee|शैक्षिक शुल्क
+도서관|library|पुस्तकालय
+강의|lecture|व्याख्यान
+교수|professor|प्राध्यापक
+유학|studying abroad|विदेशमा अध्ययन
+출석|attendance (at class)|उपस्थिति
+결석|absence|अनुपस्थिति
+복습|review (of lessons)|दोहोर्याउनु
+예습|preparing lessons in advance|पाठ अघि नै पढ्नु
+발음|pronunciation|उच्चारण
+문법|grammar|व्याकरण
+어휘|vocabulary|शब्दसङ्ग्रह
+외우다|to memorize|कण्ठ गर्नु
+연습|practice|अभ्यास
+틀리다|to be wrong|गलत हुनु
+맞다|to be correct|सही हुनु
+설명|explanation|व्याख्या
+법|law|कानुन
+법률|law, legislation|कानुनी व्यवस्था
+권리|right|अधिकार
+의무|duty, obligation|कर्तव्य
+범죄|crime|अपराध
+처벌|punishment|सजाय
+벌금|fine|जरिवाना
+위반|violation|उल्लङ्घन
+신고|report (to authorities)|उजुरी गर्नु
+질서|order|व्यवस्था
+투표|vote|मतदान
+선거|election|निर्वाचन
+국민|citizens, the people|नागरिक
+시민|citizen|नागरिक
+정부|government|सरकार
+정책|policy|नीति
+제도|system, institution|प्रणाली
+사회|society|समाज
+국가|nation, country|राष्ट्र
+인권|human rights|मानव अधिकार
+평등|equality|समानता
+차별|discrimination|भेदभाव
+갈등|conflict|द्वन्द्व
+다문화|multicultural|बहुसांस्कृतिक
+이민|immigration|आप्रवासन
+영주권|permanent residency|स्थायी बसोबासको अधिकार
+동의|agreement, consent|सहमति
+반대|opposition|विरोध
+의견|opinion|विचार
+주장|claim, assertion|दाबी
+요구|demand, request|माग
+규정|regulation|नियमावली
+기쁘다|to be glad, happy|खुसी हुनु
+화나다|to get angry|रिस उठ्नु
+외롭다|to be lonely|एक्लो महसुस हुनु
+걱정|worry|चिन्ता
+불안하다|to be anxious|चिन्तित हुनु
+긴장|nervous tension|घबराहट
+부럽다|to be envious|ईर्ष्या लाग्नु
+아쉽다|to be regretful, to feel something is lacking|अपुरो लाग्नु, पछुतो लाग्नु
+서운하다|to feel hurt, disappointed|चित्त दुख्नु
+답답하다|to feel frustrated, stuffy|अत्यास लाग्नु
+반갑다|to be glad to meet|भेटेर खुसी लाग्नु
+그립다|to miss, to long for|सम्झना आउनु
+자신감|confidence|आत्मविश्वास
+실망|disappointment|निराशा
+감사|gratitude|कृतज्ञता
+미안하다|to be sorry|माफी माग्नुपर्ने महसुस हुनु
+행복|happiness|खुसी
+부끄럽다|to be ashamed, shy|लाज लाग्नु
+즐겁다|to be enjoyable, pleasant|रमाइलो हुनु
+편안하다|to be comfortable, at ease|सहज हुनु
+지치다|to be exhausted|थाक्नु
+당황하다|to be flustered|हडबडिनु
+안심|relief, peace of mind|ढुक्क हुनु
+기대|expectation|आशा
+기온|temperature (air)|तापक्रम
+장마|rainy season|वर्षा याम
+태풍|typhoon|टाइफुन आँधी
+홍수|flood|बाढी
+가뭄|drought|खडेरी
+지진|earthquake|भूकम्प
+미세먼지|fine dust|सूक्ष्म धुलो
+오염|pollution|प्रदूषण
+자연|nature|प्रकृति
+산|mountain|पहाड
+바다|sea|समुद्र
+강|river|नदी
+숲|forest|जङ्गल
+동물|animal|जनावर
+식물|plant|बिरुवा
+지구|earth|पृथ्वी
+기후|climate|जलवायु
+재활용|recycling|पुनःप्रयोग
+에너지|energy|ऊर्जा
+맑다|to be clear (weather)|आकाश खुला हुनु
+흐리다|to be cloudy|बादल लाग्नु
+쌀쌀하다|to be chilly|चिसो हुनु
+바람|wind|हावा
+안개|fog|कुहिरो
+천둥|thunder|गर्जन
+번개|lightning|आकाशीय बिजुली
+가져오다|to bring|ल्याउनु
+가져가다|to take (away)|लैजानु
+고르다|to choose, to pick|छान्नु
+그리다|to draw|कोर्नु
+꾸미다|to decorate|सजाउनु
+끝내다|to finish|सक्नु
+넘다|to exceed, to cross over|नाघ्नु
+넣다|to put in|हाल्नु
+놓다|to put down, to place|राख्नु
+느끼다|to feel|महसुस गर्नु
+달라지다|to become different|फरक पर्नु
+던지다|to throw|फाल्नु
+돕다|to help|मद्दत गर्नु
+들다|to lift, to hold|उठाउनु
+떨어지다|to fall, to drop|खस्नु
+말리다|to dry; to dissuade|सुकाउनु; रोक्नु
+믿다|to believe, to trust|विश्वास गर्नु
+밀다|to push|धकेल्नु
+벌다|to earn|कमाउनु
+보내다|to send|पठाउनु
+붙이다|to attach, to stick|टाँस्नु
+비교하다|to compare|तुलना गर्नु
+빌리다|to borrow|सापट लिनु
+빌려주다|to lend|सापट दिनु
+선택하다|to choose, to select|छनोट गर्नु
+세우다|to stand up, to build, to set up|खडा गर्नु
+숨기다|to hide|लुकाउनु
+알리다|to inform, to let know|जानकारी दिनु
+잃어버리다|to lose|हराउनु
+잊다|to forget|बिर्सनु
+잡다|to catch, to hold|समात्नु
+정하다|to decide, to set|तय गर्नु
+지키다|to keep, to protect, to obey|पालना गर्नु, रक्षा गर्नु
+치우다|to clear away|हटाउनु
+피하다|to avoid|जोगिनु
+헤어지다|to part, to break up|छुट्टिनु
+가끔|sometimes|कहिलेकाहीँ
+자주|often|प्रायः
+항상|always|सधैं
+절대|never, absolutely not (with negative)|कहिल्यै पनि होइन
+거의|almost, hardly|लगभग
+아직|still, not yet|अझै
+이미|already|पहिले नै
+벌써|already, so soon|पहिल्यै नै
+갑자기|suddenly|अचानक
+드디어|at last, finally|अन्ततः
+결국|in the end|अन्त्यमा
+계속|continuously|निरन्तर
+다시|again|फेरि
+함께|together|सँगै
+혼자|alone|एक्लै
+따로|separately|छुट्टै
+특히|especially|विशेष गरी
+주로|mainly|मुख्यतया
+아마|probably|सायद
+별로|not particularly (with negative)|खासै होइन
+전혀|not at all (with negative)|बिल्कुल होइन
+비록|although|यद्यपि
+만약|if|यदि
+그래서|so, therefore|त्यसैले
+그러나|however, but|तर
+그런데|but, by the way|तर, अनि
+그러면|then, in that case|त्यसो भए
+하지만|but|तर
+게다가|moreover, besides|त्यसमाथि
+오히려|rather, on the contrary|उल्टै
+물론|of course|निश्चय नै
+단지|only, merely|केवल
+겨우|barely, only just|मुश्किलले
+가깝다|to be near|नजिक हुनु
+멀다|to be far|टाढा हुनु
+깊다|to be deep|गहिरो हुनु
+넓다|to be wide, spacious|फराकिलो हुनु
+좁다|to be narrow|साँघुरो हुनु
+두껍다|to be thick|बाक्लो हुनु
+얇다|to be thin|पातलो हुनु
+가볍다|to be light (weight)|हलुका हुनु
+무겁다|to be heavy|गह्रौं हुनु
+빠르다|to be fast|छिटो हुनु
+느리다|to be slow|ढिलो हुनु
+밝다|to be bright|उज्यालो हुनु
+어둡다|to be dark|अँध्यारो हुनु
+더럽다|to be dirty|फोहोर हुनु
+위험하다|to be dangerous|खतरनाक हुनु
+안전하다|to be safe|सुरक्षित हुनु
+편하다|to be comfortable, easy|सजिलो हुनु
+부족하다|to be insufficient, lacking|कम हुनु
+풍부하다|to be abundant|प्रशस्त हुनु
+다양하다|to be diverse|विविध हुनु
+비슷하다|to be similar|उस्तै हुनु
+똑같다|to be exactly the same|बिल्कुल उस्तै हुनु
+새롭다|to be new|नयाँ हुनु
+낡다|to be old, worn out|पुरानो र जीर्ण हुनु
+튼튼하다|to be sturdy, strong|बलियो हुनु
+약하다|to be weak|कमजोर हुनु
+강하다|to be strong|बलियो हुनु
+어렵다|to be difficult|गाह्रो हुनु
+쉽다|to be easy|सजिलो हुनु
+귀찮다|to be bothersome|झन्झट लाग्नु
+궁금하다|to be curious, to wonder|जान्न मन लाग्नु
+익숙하다|to be familiar, used to|अभ्यस्त हुनु
+서투르다|to be unskilled, clumsy|अनाडी हुनु
+능숙하다|to be skilled, proficient|दक्ष हुनु
+공평하다|to be fair|निष्पक्ष हुनु
+이상하다|to be strange|अनौठो हुनु
+평범하다|to be ordinary|साधारण हुनु
+확실하다|to be certain, sure|निश्चित हुनु
+심각하다|to be serious|गम्भीर हुनु
+소중하다|to be precious|मूल्यवान हुनु
+전화번호|phone number|फोन नम्बर
+문자|text message|टेक्स्ट सन्देश
+통화|phone call|फोन कुराकानी
+인터넷|internet|इन्टरनेट
+비밀번호|password|पासवर्ड
+회원|member|सदस्य
+가입|joining, signing up|सदस्य बन्नु
+탈퇴|withdrawing membership|सदस्यता छोड्नु
+이메일|email|इमेल
+첨부|attachment|संलग्न गर्नु
+검색|search|खोज
+광고|advertisement|विज्ञापन
+택배|parcel delivery|कुरियर
+주문|order|अर्डर
+배송|shipping, delivery|ढुवानी
+상품|goods, product|सामान
+제품|product|उत्पादन
+포장|packaging, wrapping|प्याकेजिङ
+시장|market|बजार
+마트|supermarket|सुपरमार्केट
+편의점|convenience store|सुविधा पसल
+가게|shop|पसल
+손님|customer, guest|ग्राहक
+점원|shop clerk|पसलको कर्मचारी
+사장|boss, owner|मालिक
+재고|stock, inventory|मौज्दात सामान
+품절|out of stock|सामान सकिएको
+요즘|these days|आजकल
+최근|recently|हालसालै
+이전|before, previous|अघि
+이후|after, since|पछि
+동안|during, for (a period)|अवधिभर
+순간|moment, instant|क्षण
+매일|every day|हरेक दिन
+매년|every year|हरेक वर्ष
+주말|weekend|सप्ताहान्त
+평일|weekday|कार्यदिन
+올해|this year|यो वर्ष
+작년|last year|गत वर्ष
+내년|next year|आउँदो वर्ष
+지난달|last month|गत महिना
+얼굴|face|अनुहार
+어깨|shoulder|काँध
+허리|waist, lower back|कम्मर
+무릎|knee|घुँडा
+손가락|finger|औंला
+팔|arm|पाखुरा
+구경하다|to look around, to sightsee|घुमफिर गर्नु, हेर्नु
+맞추다|to adjust, to match|मिलाउनु
+모이다|to gather|भेला हुनु
+바라다|to wish, to hope|आशा गर्नु
+받아들이다|to accept|स्वीकार गर्नु
+보이다|to be seen, to look|देखिनु
+부르다|to call; to sing|बोलाउनु; गाउनु
+사귀다|to make friends, to date|साथी बनाउनु
+생기다|to appear, to come into being|उत्पन्न हुनु
+설치하다|to install|जडान गर्नु
+신다|to wear (shoes, socks)|जुत्ता लगाउनु
+어기다|to violate, to break (a rule)|उल्लङ्घन गर्नु
+연결하다|to connect|जोड्नु
+오르다|to rise, to climb|माथि चढ्नु, बढ्नु
+울다|to cry|रुनु
+웃다|to laugh, to smile|हाँस्नु
+이기다|to win|जित्नु
+지다|to lose (a game)|हार्नु
+일어나다|to wake up; to happen|उठ्नु; घट्नु
+자라다|to grow up|हुर्किनु
+줄다|to decrease|घट्नु
+줄이다|to reduce|घटाउनु
+참여하다|to participate|सहभागी हुनु
+확인하다|to check, to confirm|पुष्टि गर्नु
+취소하다|to cancel|रद्द गर्नु
+변경하다|to change, to modify|परिवर्तन गर्नु
+이용하다|to use, to utilize|प्रयोग गर्नु
+사용하다|to use|प्रयोग गर्नु
+제공하다|to provide|प्रदान गर्नु
+요청하다|to request|अनुरोध गर्नु
+입력하다|to input, to type in|प्रविष्ट गर्नु
+저장하다|to save, to store|सुरक्षित गर्नु
+삭제하다|to delete|मेट्नु
+병원|hospital|अस्पताल
+실패|failure|असफलता
+얕다|to be shallow|उथलो हुनु
+낯설다|to be unfamiliar, strange|अपरिचित लाग्नु
+시끄럽다|to be noisy|हल्ला हुनु
+드물다|to be rare|दुर्लभ हुनु
+늘리다|to increase, to extend (something)|बढाउनु
+기억하다|to remember|सम्झनु
+화해하다|to reconcile, to make up|मेलमिलाप गर्नु
+받다|to receive|पाउनु
+빼다|to take out, to subtract|निकाल्नु
+기억|memory|सम्झना
+관계|relationship|सम्बन्ध
+인사|greeting|अभिवादन
+대화|conversation|कुराकानी
+의사소통|communication|सञ्चार
+사과|apology|माफी
+칭찬|praise|प्रशंसा
+비판|criticism|आलोचना
+조언|advice|सल्लाह
+격려|encouragement|प्रोत्साहन
+위로|comfort, consolation|सान्त्वना
+존중|respect|सम्मान
+신뢰|trust|विश्वास
+협력|cooperation|सहकार्य
+경쟁|competition|प्रतिस्पर्धा
+비밀|secret|गोप्य कुरा
+선물|gift|उपहार
+감정|emotion, feeling|भावना
+표현|expression|अभिव्यक्ति
+태도|attitude|रवैया
+행동|action, behavior|आचरण
+아름답다|to be beautiful|सुन्दर हुनु
+귀엽다|to be cute|प्यारो हुनु
+멋있다|to be stylish, cool|आकर्षक देखिनु
+따뜻하다|to be warm|न्यानो हुनु
+시원하다|to be cool, refreshing|चिसो र ताजगी महसुस हुनु
+차갑다|to be cold (to the touch)|चिसो हुनु
+뜨겁다|to be hot (to the touch)|तातो हुनु
+건조하다|to be dry|सुख्खा हुनु
+습하다|to be humid|आर्द्र हुनु
+딱딱하다|to be hard, stiff|कडा हुनु
+부드럽다|to be soft, gentle|नरम हुनु
+날카롭다|to be sharp|तीखो हुनु
+둥글다|to be round|गोलो हुनु
+깨닫다|to realize|थाहा पाउनु
+알아보다|to look into, to recognize|खोजबिन गर्नु
+알아차리다|to notice|ठम्याउनु
+짐작하다|to guess|अनुमान गर्नु
+예상하다|to expect, to predict|पूर्वानुमान गर्नु
+결정하다|to decide|निर्णय गर्नु
+결심하다|to resolve, to make up one's mind|दृढ संकल्प गर्नु
+도전하다|to challenge, to take on|चुनौती लिनु
+시도하다|to attempt, to try|प्रयास गर्नु
+완성하다|to complete|सम्पन्न गर्नु
+발전하다|to develop, to advance|विकास हुनु
+증가하다|to increase|वृद्धि हुनु
+감소하다|to decrease|कमी हुनु
+유지하다|to maintain|कायम राख्नु
+관리하다|to manage|व्यवस्थापन गर्नु
+운영하다|to operate, to run|सञ्चालन गर्नु
+계획하다|to plan|योजना बनाउनु
+준비하다|to prepare|तयारी गर्नु
+정리하다|to organize, to tidy up|मिलाउनु
+상의하다|to consult, to discuss|सल्लाह गर्नु
+의논하다|to discuss|छलफल गर्नु
+부탁하다|to ask a favor|विन्ती गर्नु
+양보하다|to yield, to give way|छोडिदिनु
+사과하다|to apologize|माफी माग्नु
+칭찬하다|to praise|प्रशंसा गर्नु
+비판하다|to criticize|आलोचना गर्नु
+존중하다|to respect|सम्मान गर्नु
+신뢰하다|to trust|भरोसा गर्नु
+협력하다|to cooperate|सहकार्य गर्नु
+경쟁하다|to compete|प्रतिस्पर्धा गर्नु
+노력하다|to make an effort|प्रयास गर्नु
+도전|challenge|चुनौती
+변화|change|परिवर्तन
+발전|development|विकास
+증가|increase|वृद्धि
+감소|decrease|कमी
+결과|result|नतिजा
+과정|process|प्रक्रिया
+목적|purpose|उद्देश्य
+목표|goal, target|लक्ष्य
+이익|profit, benefit|नाफा
+손해|loss, damage|घाटा
+단점|weakness, drawback|कमजोरी
+영향|influence, effect|प्रभाव
+효과|effect, effectiveness|असर
+의미|meaning|अर्थ
+내용|content|विषयवस्तु
+주제|topic, theme|विषय
+자료|data, material|सामग्री
+기준|standard, criterion|मापदण्ड
+상황|situation|अवस्था
+사실|fact|तथ्य
+현실|reality|वास्तविकता
+가치|value|मूल्य
+문제|problem|समस्या
+방안|measure, plan|उपाय
+대책|countermeasure|उपाय
+선택|choice, selection|छनोट
+기능|function, feature|कार्य, सुविधा
+안녕하세요|hello (polite)|नमस्ते
+감사합니다|thank you|धन्यवाद
+죄송합니다|I am sorry (formal)|माफ गर्नुहोस्
+실례합니다|excuse me|माफ गर्नुहोस्, म सोध्न चाहन्छु
+얼마예요?|How much is it?|कति पर्छ?
+주세요|please give me|दिनुहोस्
+도와주세요|please help me|कृपया मलाई मद्दत गर्नुहोस्
+잘 모르겠어요|I don't know, I don't understand well|मलाई राम्ररी थाहा छैन
+다시 말씀해 주세요|please say it again|कृपया फेरि भन्नुहोस्
+천천히 말씀해 주세요|please speak slowly|कृपया बिस्तारै बोल्नुहोस्
+어디예요?|Where is it?|कहाँ हो?
+길을 잃었어요|I am lost|म बाटो हराएँ
+화장실|restroom, toilet|शौचालय
+지하철역|subway station|मेट्रो स्टेशन
+버스|bus|बस
+택시|taxi|ट्याक्सी
+식당|restaurant|रेस्टुरेन्ट
+메뉴|menu|मेनु
+포장해 주세요|please pack it to go|कृपया प्याक गरिदिनुहोस्
+계산|paying the bill|बिल तिर्नु
+물|water|पानी
+음료|beverage, drink|पेय पदार्थ
+주문하다|to order|अर्डर गर्नु
+계산하다|to pay, to calculate|बिल तिर्नु
+추가|addition, extra|थप
+맛|taste, flavor|स्वाद
+배고프다|to be hungry|भोक लाग्नु
+목마르다|to be thirsty|तिर्खा लाग्नु
+배부르다|to be full (stomach)|पेट भरिनु
+아프다|to be sick, to hurt|बिरामी हुनु, दुख्नु
+어지럽다|to be dizzy|चक्कर लाग्नु
+졸리다|to be sleepy|निद्रा लाग्नु
+앞|front|अगाडि
+뒤|back, behind|पछाडि
+옆|side, next to|छेउमा
+위|top, above|माथि
+아래|below, under|तल
+안|inside|भित्र
+밖|outside|बाहिर
+근처|nearby, vicinity|नजिकै
+건너편|opposite side|उल्टो तर्फ
+사거리|intersection|चौबाटो
+직진|going straight|सिधा जानु
+우회전|right turn|दायाँ मोड्नु
+좌회전|left turn|बायाँ मोड्नु
+오른쪽|right side|दायाँ
+왼쪽|left side|बायाँ
+도둑|thief|चोर
+분실물|lost item|हराएको सामान
+비상|emergency|आपतकाल
+회의|meeting|बैठक
+회식|company dinner|कम्पनीको सामूहिक भोज
+출장|business trip|कार्यगत यात्रा
+보고|report (to a superior)|प्रतिवेदन दिनु
+결재|approval (sign-off)|स्वीकृति
+마감|deadline, closing time|अन्तिम म्याद
+사무실|office|कार्यालय
+공장|factory|कारखाना
+현장|work site, field|कार्यस्थल
+작업|work, task|काम
+안전모|safety helmet|सुरक्षा हेलमेट
+휴게시간|break time|विश्राम समय
+수당|allowance (extra pay)|भत्ता
+퇴직금|severance pay|काम छाड्दा पाइने रकम
+사업|business|व्यवसाय
+사업장|business site, workplace|कार्यस्थल
+고객|customer, client|ग्राहक
+거래|transaction, dealing|कारोबार
+계좌|bank account|बैंक खाता
+잔액|balance|बाँकी रकम
+출금|withdrawal|रकम निकाल्नु
+입금|deposit (money in)|रकम जम्मा गर्नु
+이체|transfer (money)|रकम सार्नु
+대출|loan|ऋण
+이자|interest|ब्याज
+환전|currency exchange|मुद्रा साट्नु
+환율|exchange rate|विनिमय दर
+카드|card|कार्ड
+해외송금|overseas remittance|विदेशमा रकम पठाउनु
+요금제|phone plan, rate plan|मोबाइल प्लान
+통신사|telecom company|टेलिकम कम्पनी
+데이터|data (mobile)|डाटा
+와이파이|Wi-Fi|वाइफाइ
+휴대폰|mobile phone|मोबाइल फोन
+충전기|charger|चार्जर
+번호|number|नम्बर`;
+var RELSTR=`복잡하다||단순하다,간단하다|
+단순하다|간단하다|복잡하다|
+간단하다|단순하다|복잡하다|
+가깝다||멀다|
+멀다||가깝다|
+깊다||얕다|
+얕다||깊다|
+넓다||좁다|
+좁다||넓다|
+두껍다||얇다|
+얇다||두껍다|
+가볍다||무겁다|
+무겁다||가볍다|
+빠르다||느리다|
+느리다||빠르다|
+밝다||어둡다|
+어둡다||밝다|
+깨끗하다||더럽다|
+더럽다||깨끗하다|
+위험하다||안전하다|
+안전하다||위험하다|
+강하다|튼튼하다|약하다|
+약하다||강하다|
+튼튼하다|강하다|약하다|
+어렵다||쉽다|
+쉽다||어렵다|
+새롭다||낡다|
+낡다||새롭다|
+부족하다||충분하다,풍부하다|
+충분하다|풍부하다|부족하다|
+풍부하다|충분하다|부족하다|
+다르다||똑같다,비슷하다|
+비슷하다|똑같다|다르다|
+똑같다|비슷하다|다르다|
+익숙하다||낯설다|능숙하다
+낯설다||익숙하다|
+서투르다||능숙하다|
+능숙하다||서투르다|익숙하다
+긍정적||부정적|
+부정적||긍정적|
+적극적||소극적|
+소극적||적극적|
+외향적||내성적|
+내성적||외향적|
+부지런하다||게으르다|
+게으르다||부지런하다|
+급하다||느긋하다|
+느긋하다||급하다|
+활발하다||조용하다|
+조용하다||활발하다,시끄럽다|
+시끄럽다||조용하다|
+기쁘다|즐겁다|슬프다|
+슬프다||기쁘다,즐겁다|
+즐겁다|기쁘다|슬프다,지루하다|
+지루하다||즐겁다|
+안심||걱정,불안하다|
+걱정||안심|
+불안하다||안심,편안하다|
+편안하다|편하다|불안하다|
+편하다|편안하다|불편하다|
+불편하다||편리하다,편하다|
+편리하다||불편하다|
+가능하다||불가능하다|
+불가능하다||가능하다|
+분명하다|확실하다||
+확실하다|분명하다||
+흔하다||드물다|
+드물다||흔하다|
+특별하다||평범하다,흔하다|
+평범하다||특별하다|
+저렴하다||비싸다|
+비싸다||저렴하다|
+싱겁다||짜다|
+짜다||싱겁다|
+수입||지출|저축
+지출||수입|
+저축||낭비|절약,소비
+소비||저축|지출
+절약|아끼다|낭비|
+낭비||절약,아끼다|
+아끼다|절약|낭비|
+합격||불합격|
+불합격||합격|
+출근||퇴근|
+퇴근||출근|
+입학||졸업|
+졸업||입학|
+입원||퇴원|
+퇴원||입원|
+승차||하차|
+하차||승차|
+왕복||편도|
+편도||왕복|
+무상||유상|
+유상||무상|
+개막||폐막|
+폐막||개막|
+동의||반대|
+반대||동의|
+권리||의무|
+의무||권리|
+빌리다||빌려주다|
+빌려주다||빌리다|
+이기다||지다|
+지다||이기다|
+웃다||울다|
+울다||웃다|
+켜지다||꺼지다|
+꺼지다||켜지다|
+교환|||환불,결제
+환불|||교환,결제
+고치다|||수리,고장
+고장|||수리,고치다,점검
+기대||실망|
+실망||기대|
+성공||실패|
+실패||성공|
+허락하다||거절하다|
+거절하다||허락하다|
+참다|견디다||
+견디다|참다||
+포기하다||이루다|
+이루다||포기하다|
+항상||가끔|자주
+가끔||항상|자주
+자주||가끔|
+아직||이미,벌써|
+이미|벌써|아직|
+벌써|이미|아직|
+혼자||함께|
+함께||혼자|
+이전||이후|
+이후||이전|
+작년||내년|올해
+내년||작년|올해
+평일||주말|
+주말||평일|
+줄다||늘다|
+늘다||줄다|
+줄이다||늘리다|
+늘리다||줄이다|
+오르다||내리다|
+내리다||오르다,타다|
+타다||내리다|
+잊다||기억하다|
+기억하다||잊다|기억
+싸우다||화해하다|
+화해하다||싸우다|
+이용하다|사용하다||
+사용하다|이용하다||
+고르다|선택하다||
+선택하다|고르다||
+모이다||헤어지다|
+헤어지다||모이다|
+보내다||받다|
+받다||보내다|
+넣다||빼다|
+빼다||넣다|
+도착하다||출발|
+출발||도착하다|
+병|||증상,진료,치료,약,병원
+약|||약국,처방,부작용
+수술|||입원,퇴원,치료
+면접|||이력서,자기소개서,합격
+채용|||구직,지원자,면접
+월급|||급여,연봉,근로자
+지하철|||환승,노선,교통카드
+신분증|||여권,주민센터,출입국
+세금|||납부,수수료,영수증
+할인|||쿠폰,할부,결제
+세입자|||집주인,월세,보증금,계약서
+이사|||부동산,월세,전세
+앞||뒤|
+뒤||앞|
+위||아래|
+아래||위|
+안||밖|
+밖||안|
+오른쪽||왼쪽|
+왼쪽||오른쪽|
+우회전||좌회전|
+좌회전||우회전|
+입금||출금|
+출금||입금|
+배고프다||배부르다|
+배부르다||배고프다|
+대출|||이자,저축
+환전|||환율,수수료
+계좌|||입금,출금,이체,잔액
+회의|||보고,결재,마감`;
+var RELS={};RELSTR.split("\n").forEach(function(l){var a=l.split("|");if(a[0])RELS[a[0]]={s:(a[1]||"").split(",").filter(Boolean),a:(a[2]||"").split(",").filter(Boolean),r:(a[3]||"").split(",").filter(Boolean)}});
+function gl(w){var f=words().find(function(x){return x[0]==w});return f?f[1].split(/[;,]/)[0]:""}
+function chip(w){var g=gl(w);return '<span class="chip" data-s="'+esc(w)+'">'+esc(w)+(g?' <small>'+esc(g)+'</small>':'')+'</span>'}
+function relBox(w){var r=RELS[w];if(!r)return"";var h="";
+ if(r.s.length)h+='<div class="rl"><b>≈ Similar meaning</b>'+r.s.map(chip).join("")+'</div>';
+ if(r.a.length)h+='<div class="rl"><b>↔ Opposite</b>'+r.a.map(chip).join("")+'</div>';
+ if(r.r.length)h+='<div class="rl"><b>• Related words</b>'+r.r.map(chip).join("")+'</div>';
+ return '<div class="relbox">'+h+'</div>'}
+function bindChips(root){root.querySelectorAll(".chip").forEach(function(c){c.onclick=function(){say(c.dataset.s)}})}
+function relTab(){
+ var el=document.getElementById("rel");
+ if(!el.dataset.init){el.innerHTML='<input type="text" id="rq" placeholder="Search a word"><p class="mu">Tap any word to hear it. ≈ similar · ↔ opposite · • related</p><div id="rlist"></div>';el.dataset.init=1;document.getElementById("rq").oninput=relTab}
+ var q=document.getElementById("rq").value.toLowerCase();
+ var r=words().filter(function(w){return RELS[w[0]]&&(!q||w.join(" ").toLowerCase().indexOf(q)>-1)});
+ document.getElementById("rlist").innerHTML=r.map(function(w){return '<div class="card"><div class="row" style="justify-content:space-between"><div><b style="font-size:22px">'+esc(w[0])+'</b><div class="mu" style="text-align:left">'+esc(w[1])+' · '+esc(w[2])+'</div></div><button class="sp" data-s="'+esc(w[0])+'">🔊</button></div>'+relBox(w[0])+'</div>'}).join("")||'<p class="mu">No words found.</p>';
+ bindChips(document.getElementById("rlist"));
+ document.querySelectorAll("#rlist .sp").forEach(function(b){b.onclick=function(){say(b.dataset.s)}});
+}
+var S=function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+var P=function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+var custom=S("kw_custom",[]),known=S("kw_known",{}),rep=S("kw_rep",{});
+function words(){return BASE.split("\n").map(function(l){return l.split("|")}).filter(function(a){return a.length>=3}).concat(custom)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var voiceOK=true;
+function note(h){var n=document.getElementById("vn");if(n)n.innerHTML=h}
+function gt(t){return '<a href="https://translate.google.com/?sl=ko&tl=en&text='+encodeURIComponent(t)+'&op=translate" target="_blank" rel="noopener" style="color:var(--ac)">Open in Google Translate to hear it 🔗</a>'}
+function say(t){
+ note("");
+ if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){note("Audio is not supported in this view. Try opening the page in Chrome.<br>"+gt(t));return}
+ try{
+  var ss=window.speechSynthesis;ss.cancel();ss.resume();
+  var vs=ss.getVoices(),v=vs.find(function(x){return x.lang.replace("_","-").toLowerCase().indexOf("ko")==0});
+  var u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";u.rate=.8;u.volume=1;if(v)u.voice=v;
+  u.onerror=function(e){note("Could not play audio ("+(e.error||"error")+"). Check media volume and Korean text-to-speech in your phone settings.<br>"+gt(t))};
+  var started=false;u.onstart=function(){started=true};
+  if(vs.length&&!v)note("No Korean voice found. Install Korean text-to-speech (Google Speech Services) in phone settings.<br>"+gt(t));
+  setTimeout(function(){ss.speak(u)},50);
+  setTimeout(function(){if(!started&&!ss.speaking)note("Audio did not start. Check media volume, or open the page in Chrome.<br>"+gt(t))},2500);
+ }catch(e){note("Audio failed.<br>"+gt(t))}
+}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var queue=null,shown=false;
+function startQ(){queue=shuffle(words().filter(function(w){return !known[w[0]]}));shown=false}
+function save(){P("kw_known",known);P("kw_rep",rep)}
+function learn(){
+ var el=document.getElementById("learn"),all=words(),kn=all.filter(function(w){return known[w[0]]}).length;
+ if(!queue)startQ();
+ var h='<div class="mu" style="margin-bottom:8px">Known '+kn+' / '+all.length+' · Left in this round: '+queue.length+'</div>';
+ if(!queue.length){h+='<div class="card"><div class="ko">🎉</div><div class="mean"><div class="en">'+(kn==all.length?'You know every word!':'Round finished!')+'</div></div><button class="big" id="again">Start again with unknown words</button></div>';el.innerHTML=h;document.getElementById("again").onclick=function(){startQ();learn()};return}
+ var w=queue[0];
+ h+='<div class="card"><div class="ko">'+esc(w[0])+'</div><div class="row"><button class="sp" id="spk" aria-label="Listen">🔊</button></div>';
+ if(!shown){h+='<br><button class="big" id="show">Show meaning</button>'}
+ else{h+='<div class="mean"><div class="en">'+esc(w[1])+'</div><div class="ne">'+esc(w[2])+'</div></div>'+relBox(w[0])}
+ h+='<div class="row" style="margin-top:12px"><button class="big no" id="rp">🔁 Repeat</button>'+(shown?'<button class="big" id="nx">Next ➡️</button>':'<button class="big ok" id="kw">✅ I know</button>')+'</div>';
+ h+='</div>';
+ el.innerHTML=h;bindChips(el);
+ document.getElementById("spk").onclick=function(){say(w[0])};
+ if(!shown){document.getElementById("show").onclick=function(){shown=true;learn();say(w[0])}}
+ if(shown){document.getElementById("nx").onclick=function(){queue.shift();shown=false;note("");learn()}}
+ else{document.getElementById("kw").onclick=function(){known[w[0]]=true;queue.shift();shown=false;save();note("");learn()}}
+ document.getElementById("rp").onclick=function(){rep[w[0]]=(rep[w[0]]||0)+1;queue.shift();var at=Math.min(queue.length,4);queue.splice(at,0,w);shown=false;save();note("");learn()};
+}
+function list(){
+ var el=document.getElementById("list");
+ if(!el.dataset.init){el.innerHTML='<input type="text" id="q" placeholder="Search Korean / English / नेपाली"><select id="f"><option value="all">All words</option><option value="u">Unknown only</option><option value="k">Known only</option></select><div class="card" id="lw"></div>';el.dataset.init=1;document.getElementById("q").oninput=list;document.getElementById("f").onchange=list}
+ var q=document.getElementById("q").value.toLowerCase(),f=document.getElementById("f").value;
+ var r=words().filter(function(w){var k=!!known[w[0]];if(f=="u"&&k)return false;if(f=="k"&&!k)return false;return !q||w.join(" ").toLowerCase().indexOf(q)>-1});
+ document.getElementById("lw").innerHTML=r.map(function(w,i){return '<div class="w"><input type="checkbox" data-w="'+esc(w[0])+'"'+(known[w[0]]?' checked':'')+'><div class="k">'+esc(w[0])+'</div><div class="m">'+esc(w[1])+'<br><span>'+esc(w[2])+'</span></div><button class="sp" data-s="'+esc(w[0])+'">🔊</button></div>'}).join("")||'<p class="mu">No words found.</p>';
+ document.querySelectorAll("#lw input").forEach(function(c){c.onchange=function(){if(c.checked)known[c.dataset.w]=true;else delete known[c.dataset.w];save();queue=null}});
+ document.querySelectorAll("#lw .sp").forEach(function(b){b.onclick=function(){say(b.dataset.s)}});
+}
+function stats(){
+ var all=words(),kn=all.filter(function(w){return known[w[0]]}).length,pc=all.length?Math.round(kn/all.length*100):0;
+ var h='<div class="card"><div class="stats"><div><b>'+all.length+'</b><span class="mu">Total</span></div><div><b style="color:var(--ok)">'+kn+'</b><span class="mu">Known ✅</span></div><div><b style="color:var(--no)">'+(all.length-kn)+'</b><span class="mu">To learn</span></div></div><br><div class="bar"><i style="width:'+pc+'%"></i></div><p class="mu">'+pc+'% complete</p></div><div class="card"><b>Progress by set (25 words)</b>';
+ for(var i=0;i<all.length;i+=25){var s=all.slice(i,i+25),k=s.filter(function(w){return known[w[0]]}).length;h+='<div class="set"><span style="width:62px">Set '+(i/25+1)+'</span><div class="bar"><i style="width:'+Math.round(k/s.length*100)+'%"></i></div><span>'+k+'/'+s.length+'</span></div>'}
+ h+='</div>';
+ var hard=all.filter(function(w){return rep[w[0]]&&!known[w[0]]}).sort(function(a,b){return rep[b[0]]-rep[a[0]]}).slice(0,10);
+ h+='<div class="card"><b>Hardest words (most repeated, not yet known)</b>'+(hard.length?hard.map(function(w){return '<div class="w"><div class="k">'+esc(w[0])+'</div><div class="m">'+esc(w[1])+'<br><span>'+esc(w[2])+'</span></div><span class="mu">×'+rep[w[0]]+'</span></div>'}).join(""):'<p class="mu" style="text-align:left">None yet. Words you press 🔁 Repeat on will appear here.</p>')+'</div>';
+ document.getElementById("stats").innerHTML=h;
+}
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){document.querySelectorAll("nav button").forEach(function(x){x.classList.toggle("on",x==b)});["learn","list","rel","stats","add"].forEach(function(id){document.getElementById(id).classList.toggle("hide",id!=b.dataset.t)});if(b.dataset.t=="learn")learn();if(b.dataset.t=="list")list();if(b.dataset.t=="rel")relTab();if(b.dataset.t=="stats")stats()}});
+document.getElementById("addbtn").onclick=function(){
+ var n=0,have={};words().forEach(function(w){have[w[0]]=1});
+ document.getElementById("ta").value.split("\n").forEach(function(l){var a=l.split("|").map(function(x){return x.trim()});if(a.length>=3&&a[0]&&a[1]&&a[2]&&!have[a[0]]){custom.push(a.slice(0,3));have[a[0]]=1;n++}});
+ P("kw_custom",custom);queue=null;document.getElementById("ta").value="";document.getElementById("addmsg").textContent=n+" word(s) added.";
+};
+document.getElementById("reset").onclick=function(){if(confirm("Reset all progress?")){known={};rep={};save();queue=null;document.getElementById("addmsg").textContent="Progress reset."}};
+
+function bm(t){document.getElementById("bkmsg").textContent=t}
+document.getElementById("bkshow").onclick=function(){document.getElementById("bk").value=JSON.stringify({v:1,known:known,rep:rep,custom:custom});bm("Backup ready. Tap Copy.")};
+document.getElementById("bkcopy").onclick=function(){var t=document.getElementById("bk");if(!t.value)document.getElementById("bkshow").onclick();t.select();try{navigator.clipboard.writeText(t.value).then(function(){bm("Copied.")},function(){document.execCommand("copy");bm("Copied.")})}catch(e){try{document.execCommand("copy");bm("Copied.")}catch(x){bm("Select the text and copy it manually.")}}};
+document.getElementById("bkrest").onclick=function(){try{var d=JSON.parse(document.getElementById("bk").value);if(!d||typeof d.known!="object"||typeof d.rep!="object"||!Array.isArray(d.custom))throw 1;known=d.known;rep=d.rep;custom=d.custom.filter(function(a){return Array.isArray(a)&&a.length>=3});save();P("kw_custom",custom);queue=null;bm("Restored: "+Object.keys(known).length+" known words.")}catch(e){bm("That backup text is not valid.")}};
+try{speechSynthesis.onvoiceschanged=function(){}}catch(e){}
+learn();
+</script></main><script>if("serviceWorker" in navigator&&location.protocol.indexOf("http")==0){navigator.serviceWorker.register("sw.js").catch(function(){})}</script></body></html>
