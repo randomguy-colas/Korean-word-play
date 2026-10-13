@@ -30,15 +30,18 @@ input[type=text],select,textarea{width:100%;padding:10px;border:1px solid var(--
 .sm{padding:9px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font-size:13px}
 .set{display:flex;align-items:center;gap:8px;font-size:13px;margin:6px 0}.set .bar{flex:1}
 .hide{display:none}
-nav button{font-size:13px;padding:10px 2px}
+nav{gap:4px}nav button{font-size:12px;padding:10px 2px}
+.ch{display:block;width:100%;text-align:left;padding:12px;margin:8px 0;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font-size:16px}.ch small{display:block;color:var(--ac);font-size:14px}.ch.ok{border-color:var(--ok);background:rgba(47,158,68,.2)}.ch.bad{border-color:var(--no);background:rgba(232,89,12,.2)}
+
 .relbox{margin-top:12px;padding-top:10px;border-top:1px dashed var(--bd);font-size:13px}.rl{margin:6px 0}.rl b{display:block;color:var(--mu);font-size:12px}.chip{display:inline-block;margin:3px 4px 0 0;padding:4px 9px;border:1px solid var(--bd);border-radius:14px;background:var(--bg);font-size:15px}.chip small{color:var(--mu);font-size:11px}
 </style></head><body><main>
 <h1>🇰🇷 Korean Word Practice · KIIP 3 / TOPIK II</h1>
-<nav><button data-t="learn" class="on">Practice</button><button data-t="list">Words</button><button data-t="rel">Related</button><button data-t="stats">Analyze</button><button data-t="add">Add</button></nav>
+<nav><button data-t="learn" class="on">Practice</button><button data-t="list">Words</button><button data-t="rel">Related</button><button data-t="game">Game</button><button data-t="stats">Analyze</button><button data-t="add">Add</button></nav>
 
 <p class="mu" id="vn" style="min-height:20px"></p>
 <section id="learn"></section>
 <section id="list" class="hide"></section>
+<section id="game" class="hide"></section>
 <section id="rel" class="hide"></section>
 <section id="stats" class="hide"></section>
 <section id="add" class="hide">
@@ -277,7 +280,7 @@ var BASE=`가격|price|मूल्य
 성실하다|to be sincere, hardworking|इमानदार र मेहनती हुनु
 예의|manners, courtesy|शिष्टाचार
 배려|consideration for others|अरूको ख्याल राख्नु
-고집|stubbornness|जिद्दी
+고집|stubbornness|जिद्दीपन
 급하다|to be hasty, urgent|हतारिलो हुनु
 느긋하다|to be relaxed, easygoing|निश्चिन्त हुनु
 조용하다|to be quiet|शान्त हुनु
@@ -801,7 +804,7 @@ var BASE=`가격|price|मूल्य
 인사|greeting|अभिवादन
 대화|conversation|कुराकानी
 의사소통|communication|सञ्चार
-사과|apology|माफी
+사과|apology; apple|माफी; स्याउ
 칭찬|praise|प्रशंसा
 비판|criticism|आलोचना
 조언|advice|सल्लाह
@@ -974,7 +977,291 @@ var BASE=`가격|price|मूल्य
 와이파이|Wi-Fi|वाइफाइ
 휴대폰|mobile phone|मोबाइल फोन
 충전기|charger|चार्जर
-번호|number|नम्बर`;
+번호|number|नम्बर
+대인|toward people, interpersonal|व्यक्तिहरूसँग सम्बन्धित
+대인 관계|interpersonal relationship|आपसी सम्बन्ध
+친목|friendly gathering, fellowship|मेलमिलाप
+공동|joint, shared|साझा
+공통|commonality, common|साझा, समान
+공공|public|सार्वजनिक
+공감|empathy|सहानुभूति
+공감대|common ground, shared sympathy|साझा भावना
+동창|alumni, schoolmate|सहपाठी
+선결제|paying in advance|अग्रिम भुक्तानी
+선불|prepaid|पहिले नै तिर्ने (प्रिपेड)
+후불|postpaid|पछि तिर्ने (पोस्टपेड)
+선배|senior (at school or work)|सिनियर
+후배|junior (at school or work)|जुनियर
+사연|story, circumstances behind something|कथा, कारण
+지시|instruction, order|निर्देशन
+규칙을 지키다|to follow the rules|नियम पालना गर्नु
+규칙을 어기다|to break the rules|नियम उल्लङ्घन गर्नु
+법을 지키다|to obey the law|कानुन पालना गर्नु
+법을 어기다|to break the law|कानुन उल्लङ्घन गर्नु
+시차|time difference|समयको फरक
+안부를 전하다|to pass on regards|हालखबर सोधेको कुरा भनिदिनु
+관심을 갖다|to take an interest|रुचि राख्नु
+신경 쓰다|to care about, to be concerned|ध्यान दिनु, चिन्ता गर्नु
+적응하다|to adapt|अभ्यस्त हुनु
+지참|bringing along|साथमा लिएर आउनु
+믿음|faith, trust|विश्वास
+신뢰성|reliability|विश्वसनीयता
+파손|damage, breakage|क्षति
+훼손|damage, defacing|बिगार्नु, क्षति
+훼손되다|to be damaged|क्षति हुनु
+시각|sight, vision; viewpoint|दृष्टि
+시각 장애|visual impairment|दृष्टिविहीनता
+시력|eyesight|आँखाको दृष्टि
+색상|color|रङ
+색깔|color|रङ
+변심|change of heart|मन परिवर्तन
+선|line, wire; prefix meaning "before" (선불, 선결제)|रेखा, तार; "पहिले" भन्ने उपसर्ग
+헐렁하다|to be loose-fitting|खुकुलो हुनु
+끼다|to be tight, to fit snugly|कस्सिनु
+얼룩|stain|दाग
+바느질|sewing, stitching|सिलाइ
+피해|damage, harm|क्षति
+치수|size, measurements|नाप
+신선식품|fresh food|ताजा खाद्यवस्तु
+신발을 신다|to wear shoes|जुत्ता लगाउनु
+구어체|spoken style|बोलीचालीको शैली
+문어체|written style|लेखाइको शैली
+환절기|change of seasons|ऋतु परिवर्तन हुने समय
+한적하다|to be quiet, secluded|शान्त हुनु
+줄을 서다|to stand in line|लाइन लाग्नु
+보건소|public health center|स्वास्थ्य चौकी
+닫다|to close (something)|बन्द गर्नु
+닫히다|to be closed|बन्द हुनु
+우울하다|to be depressed, gloomy|उदास हुनु
+서글프다|to feel sad, forlorn|दुःखी हुनु
+개봉|opening, release|खोल्नु, रिलिज
+미개봉|unopened|नखोलिएको
+단|however, but (condition)|तर
+잔업|overtime work|अतिरिक्त काम
+냉동식품|frozen food|जमाइएको खाद्यवस्तु
+두려움|fear|डर
+무서움|fear|डर
+중고품|second-hand goods|पुरानो सामान
+외로움|loneliness|एक्लोपन
+정상|normal; summit|सामान्य; शिखर
+생소하다|to be unfamiliar|अपरिचित लाग्नु
+자세히|in detail|विस्तारमा
+물려주다|to hand down, to pass on|हस्तान्तरण गर्नु
+물려받다|to inherit, to receive handed-down|हस्तान्तरण पाउनु
+전승하다|to hand down (tradition)|परम्परा हस्तान्तरण गर्नु
+늙다|to grow old|बुढो हुनु
+역사적|historical|ऐतिहासिक
+문화유산|cultural heritage|सांस्कृतिक सम्पदा
+지정하다|to designate|तोक्नु
+탐방하다|to visit, to explore|भ्रमण गर्नु
+인정하다|to acknowledge, to recognize|स्वीकार गर्नु
+청양고추|Cheongyang chili (very hot chili)|धेरै पिरो खुर्सानी
+이민자|immigrant|आप्रवासी
+이주민|migrant, settler|बसाइँ सरेको व्यक्ति
+편견|prejudice|पूर्वाग्रह
+선입견|preconception|पूर्वधारणा
+고정관념|stereotype, fixed idea|स्थिर धारणा
+방식|method, way|तरिका
+의도|intention|उद्देश्य
+진심으로|sincerely|हृदयदेखि
+정확하게|precisely|ठ्याक्कै
+이사하다|to move house|घर सर्नु
+수집하다|to collect|बटुल्नु
+이직|changing jobs|जागिर परिवर्तन
+재직증명서|certificate of employment|कार्यरत रहेको प्रमाणपत्र
+동창회|alumni reunion|सहपाठी भेला
+정기적으로|regularly|नियमित रूपमा
+단체|group, organization|समूह
+악기|musical instrument|बाजा
+연주|musical performance|वाद्य प्रस्तुति
+공유하다|to share|साझा गर्नु
+소개팅|blind date|परिचय गराइएको पहिलो भेट
+기본|basic|आधारभूत
+기본급|basic salary|आधारभूत तलब
+문의하다|to inquire|सोधपुछ गर्नु
+여쭈다|to ask (honorific)|सोध्नु (आदरार्थी)
+친해지다|to become close|नजिक हुनु
+예전|the past, former times|पहिला
+입사|joining a company|कम्पनीमा प्रवेश
+대체|replacement|प्रतिस्थापन
+품질|quality|गुणस्तर
+음질|sound quality|आवाजको गुणस्तर
+화질|picture quality|तस्बिरको गुणस्तर
+화면|screen|स्क्रिन
+덜렁거리다|to be careless, scatterbrained|लापरबाह हुनु
+다정하다|to be affectionate, warm|स्नेही हुनु
+무뚝뚝하다|to be curt, blunt|रुखो हुनु
+개발도상국|developing country|विकासशील देश
+후진국|underdeveloped country|अविकसित देश
+선진국|developed country|विकसित देश
+적금|installment savings|किस्ताबन्दी बचत
+완충|full charge|पूर्ण चार्ज
+점심값|lunch cost|खानाको खर्च
+항목|item, category|विषय, शीर्षक
+통신비|telecom fee|सञ्चार खर्च
+의료비|medical expenses|उपचार खर्च
+경조사비|congratulatory and condolence expenses|शुभ-अशुभ कार्यमा लाग्ने खर्च
+공과금|utility bills|बिजुली, पानी आदिको बिल
+가계부|household account book|घरखर्चको हिसाब किताब
+적립하다|to accumulate (points)|जम्मा गर्नु
+포인트|points|पोइन्ट
+합리적|rational, reasonable|तर्कसङ्गत
+예상|expectation, forecast|अपेक्षा
+음성|voice, sound|आवाज
+이나|as many as, as much as|जतिको, धेरै
+밖에|only (with a negative verb)|मात्र (नकारात्मकसँग)
+항공사|airline|हवाई कम्पनी
+교복|school uniform|विद्यालय पोशाक
+기사|article; driver|लेख; चालक
+임금 체불|unpaid wages|तलब नपाउनु
+통번역|interpretation and translation|दोभाषे र अनुवाद
+아이를 맡기다|to leave a child in someone's care|बच्चा जिम्मा लगाउनु
+장난|prank, mischief|ठट्टा
+장난감|toy|खेलौना
+대여하다|to rent out, to lend|भाडामा दिनु
+육아|childcare|बाल हेरचाह
+예방 접종|vaccination|खोप
+창업|starting a business|व्यवसाय सुरु गर्नु
+제빵|bread-making, baking|पाउरोटी बनाउने काम
+공짜|free (no cost)|निःशुल्क
+반납하다|to return (something borrowed)|फिर्ता गर्नु
+돈을 빌리다|to borrow money|पैसा सापटी लिनु
+돈을 갚다|to pay back money|पैसा फिर्ता तिर्नु
+동네|neighborhood|टोल
+쏟다|to spill, to pour out|पोख्नु
+매달|every month|प्रत्येक महिना
+메달|medal|पदक
+특강|special lecture|विशेष कक्षा
+초급|beginner level|प्रारम्भिक तह
+중급|intermediate level|मध्यम तह
+고급|advanced level|उच्च तह
+고압|high pressure, high voltage|उच्च चाप
+경기|match, game; economy|खेल; अर्थतन्त्र
+강좌|course, lecture series|पाठ्यक्रम
+강당|auditorium|सभाकक्ष
+고충|hardship, grievance|कष्ट, गुनासो
+기자|journalist|पत्रकार
+독감|flu|इन्फ्लुएन्जा
+참가 자격|eligibility to participate|सहभागी हुने योग्यता
+항공료|airfare|हवाई भाडा
+중앙|center, central|केन्द्र
+의료|medical care|चिकित्सा
+외래어|loanword|विदेशी भाषाबाट आएको शब्द
+설레다|to feel excited, to flutter|उत्साहित हुनु
+애|child (short for 아이)|बच्चा
+남다|to remain, to be left|बाँकी रहनु
+다투다|to quarrel|झगडा गर्नु
+눈을 흘기다|to glare sideways|आँखा तर्नु
+동아리|club (school, hobby)|क्लब
+하루종일|all day|दिनभरि
+봉사|volunteering, service|स्वयंसेवा
+등|back; lamp|ढाड; बत्ती
+호기심|curiosity|जिज्ञासा
+마음속|inside one's heart|मनभित्र
+겉|outside, surface|बाहिर
+장기 자랑|talent show|प्रतिभा प्रदर्शन
+앞에 나서다|to step forward|अगाडि सर्नु
+자랑하다|to boast, to show off|घमण्ड गर्नु, देखाउनु
+화려하다|to be fancy, splendid|भव्य हुनु
+악용되다|to be misused|दुरुपयोग हुनु
+개방적이다|to be open-minded|खुला विचारको हुनु
+보수적이다|to be conservative|रूढिवादी हुनु
+유출되다|to leak out|सूचना बाहिरिनु
+신중하다|to be cautious|होसियार हुनु
+유머 감각|sense of humor|हास्य भावना
+책임감|sense of responsibility|जिम्मेवारीको भावना
+통역사|interpreter|दोभाषे
+미용사|hairdresser|कपाल सजाउने व्यक्ति
+내일|tomorrow|भोलि
+반 친구|classmate|सहपाठी
+규칙에 어긋나다|to go against the rules|नियमविपरीत हुनु
+공감을 잘해 주다|to be good at empathizing|राम्ररी सहानुभूति राखिदिनु
+공통점|common point, similarity|समानता
+보기|example, answer choices (in a test)|उदाहरण, विकल्प
+예|example; yes|उदाहरण; हो
+예시|example, illustration|उदाहरण
+공감대가 있다|to share common ground|साझा भावना हुनु
+공감대가 없다|to have no common ground|साझा भावना नहुनु
+평소|usually, ordinary times|साधारण समय
+이직 증명서|certificate of previous employment|अघिल्लो कामको प्रमाणपत्र
+체육 대회|sports day, athletic meet|खेलकुद प्रतियोगिता
+여부|whether or not|हो वा होइन
+제품 품질|product quality|उत्पादनको गुणस्तर
+적극적이다|to be active, proactive|सक्रिय हुनु
+소극적이다|to be passive, reserved|निष्क्रिय हुनु
+저개발국|underdeveloped country|अल्पविकसित देश
+낯선 사람|stranger|अपरिचित व्यक्ति
+유머 감각이 많다|to have a good sense of humor|हास्यबोध भएको हुनु
+정이 많다|to be warm-hearted, affectionate|स्नेही हुनु
+책임감이 강하다|to have a strong sense of responsibility|जिम्मेवारीको भावना बलियो हुनु
+호기심이 많다|to be very curious|जिज्ञासु हुनु
+께서|subject particle (honorific)|आदरार्थी कर्ताको चिन्ह
+속|inside|भित्र
+자상하다|to be considerate, caring|ख्याल गर्ने हुनु
+저하되다|to decline, to deteriorate|घट्नु, खस्कनु
+속담|proverb|उखान
+제거|removal|हटाउने काम
+제거 시|upon removal|हटाउँदा
+바지가 끼다|the pants are tight|पाइन्ट कस्सिनु
+바느질이 잘못되다|the stitching is faulty|सिलाइ बिग्रनु
+얼룩이 있다|there is a stain|दाग छ
+개봉하다|to open, to release|खोल्नु, रिलिज गर्नु
+수선|repair, alteration|मर्मत, काटछाँट
+수선 가능|repair possible|मर्मत गर्न सकिने
+어디로|to where, which way|कतातिर
+어딜|where (short for 어디를)|कहाँ
+신뢰감|sense of trust|भरोसाको भावना
+사과가 싸요|apples are cheap|स्याउ सस्तो छ
+사과를 사요|I buy apples|म स्याउ किन्छु
+야간 근무|night shift|राति काम
+역사적으로|historically|ऐतिहासिक रूपमा
+여행하다|to travel|यात्रा गर्नु
+통번역 서비스|interpretation and translation service|दोभाषे र अनुवाद सेवा
+장난감을 대여하다|to rent toys|खेलौना भाडामा लिनु
+육아 용품|childcare supplies|बाल हेरचाह सामग्री
+노인을 돌보다|to care for the elderly|वृद्धवृद्धाको हेरचाह गर्नु
+아이를 돌보다|to take care of a child|बच्चाको हेरचाह गर्नु
+예방 접종을 받다|to get vaccinated|खोप लगाउनु
+무료|free of charge|निःशुल्क
+빚|debt|ऋण
+빚을 지다|to get into debt|ऋण लाग्नु
+빚을 갚다|to repay a debt|ऋण तिर्नु
+젖다|to get wet|भिज्नु
+커피를 쏟다|to spill coffee|कफी पोख्नु
+자세한|detailed|विस्तृत
+수강|taking a class|कक्षा लिनु
+고압 가스|high-pressure gas|उच्च चापको ग्यास
+고압 전기|high-voltage electricity|उच्च भोल्टेजको बिजुली
+교류|exchange, interaction|आदानप्रदान
+대상|target, subject; grand prize|लक्षित वर्ग; ठूलो पुरस्कार
+겨울철|winter season|जाडो याम
+겨울철 독감|winter flu|जाडोको इन्फ्लुएन्जा
+친정|a married woman's parental home|विवाहित महिलाको माइत
+창업 상담|business start-up consultation|व्यवसाय सुरुवात परामर्श
+중도|midway, halfway|बीचमै
+대여|rental|भाडामा दिने काम
+쭉|straight, all the way; continuously|सिधै, निरन्तर
+충동구매를 하다|to buy on impulse|अचानक किन्नु
+합리적이다|to be rational, reasonable|तर्कसङ्गत हुनु
+합리적인 구매|reasonable purchase|तर्कसङ्गत खरिद
+틀다|to turn on (a device); to twist|चलाउनु; मोड्नु
+이월 상품|carry-over goods (last season's items)|गत सिजनको सामान
+실제|reality, actual|वास्तविकता
+진짜|real, genuine|साँचो
+정말|really|साँच्चै
+전셋집|house leased with jeonse|전세 मा लिइएको घर
+벼룩시장|flea market|पुरानो सामान बेच्ने बजार
+공동 구매|group buying|सामूहिक खरिद
+정문|main gate|मुख्य ढोका
+조사|survey, investigation|सर्वेक्षण, अनुसन्धान
+실시하다|to carry out, to implement|सञ्चालन गर्नु
+자취하다|to live on one's own, away from family|एक्लै बस्नु
+나만의 방법|my own way|मेरो आफ्नै तरिका
+가급적|as far as possible|सकेसम्म
+단거리|short distance|छोटो दूरी
+장거리|long distance|लामो दूरी
+저축하다|to save money|बचत गर्नु
+과소비|overspending|अत्यधिक खर्च`;
 var RELSTR=`복잡하다||단순하다,간단하다|
 단순하다|간단하다|복잡하다|
 간단하다|단순하다|복잡하다|
@@ -1164,7 +1451,33 @@ var RELSTR=`복잡하다||단순하다,간단하다|
 대출|||이자,저축
 환전|||환율,수수료
 계좌|||입금,출금,이체,잔액
-회의|||보고,결재,마감`;
+회의|||보고,결재,마감
+선불||후불|
+후불||선불|
+선배||후배|
+후배||선배|
+단거리||장거리|
+장거리||단거리|
+개방적이다||보수적이다|
+보수적이다||개방적이다|
+적극적이다||소극적이다|
+소극적이다||적극적이다|
+선진국||후진국,저개발국|
+후진국|저개발국||선진국
+겉||속|
+속||겉|
+한적하다||복잡하다|
+무료|공짜||
+공짜|무료||
+다정하다||무뚝뚝하다|
+무뚝뚝하다||다정하다|
+꼼꼼하다||덜렁거리다|
+덜렁거리다||꼼꼼하다|
+닫다|||닫히다
+닫히다|||닫다
+빚|||빚을 지다,빚을 갚다
+저축하다||과소비|
+과소비||저축하다|`;
 var RELS={};RELSTR.split("\n").forEach(function(l){var a=l.split("|");if(a[0])RELS[a[0]]={s:(a[1]||"").split(",").filter(Boolean),a:(a[2]||"").split(",").filter(Boolean),r:(a[3]||"").split(",").filter(Boolean)}});
 function gl(w){var f=words().find(function(x){return x[0]==w});return f?f[1].split(/[;,]/)[0]:""}
 function chip(w){var g=gl(w);return '<span class="chip" data-s="'+esc(w)+'">'+esc(w)+(g?' <small>'+esc(g)+'</small>':'')+'</span>'}
@@ -1186,6 +1499,46 @@ function relTab(){
 var S=function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
 var P=function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 var custom=S("kw_custom",[]),known=S("kw_known",{}),rep=S("kw_rep",{});
+var game=S("kw_game",{best:0,score:0,plays:0}),G=null;
+function g1(w){return w[1].split(/[;,]/)[0].trim()}
+function n1(w){return w[2].split(/[;,]/)[0].trim()}
+function startGame(){
+ var all=words(),pool=all.filter(function(w){return !known[w[0]]});if(pool.length<10)pool=all;
+ pool=shuffle(pool).sort(function(a,b){return (rep[b[0]]||0)-(rep[a[0]]||0)}).slice(0,10);
+ var q=pool.map(function(w){
+  var vb=w[0].slice(-1)=="다";
+  var c=all.filter(function(x){return x[0]!=w[0]&&(x[0].slice(-1)=="다")==vb&&g1(x).toLowerCase()!=g1(w).toLowerCase()&&n1(x)!=n1(w)});
+  if(c.length<3)c=all.filter(function(x){return x[0]!=w[0]&&g1(x).toLowerCase()!=g1(w).toLowerCase()});
+  return {w:w,ch:shuffle([w].concat(shuffle(c).slice(0,3)))}});
+ G={q:q,i:0,score:0,streak:0,max:0,ans:null,missed:[]};gameTab();
+}
+function gameTab(){
+ var el=document.getElementById("game"),h;
+ if(!G){
+  el.innerHTML='<div class="card"><div class="ko" style="font-size:30px">🎯 Word Hunt</div><p class="mu">10 rounds per game. Pick the right meaning. Your best streak is saved on this device.</p><div class="stats"><div><b>'+game.best+'</b><span class="mu">Best streak</span></div><div><b>'+game.score+'/10</b><span class="mu">Best score</span></div><div><b>'+game.plays+'</b><span class="mu">Games</span></div></div><br><button class="big" id="gs">Start game</button><p class="mu">Wrong answers are added to your hardest words. The game does not mark words as known.</p></div>';
+  document.getElementById("gs").onclick=startGame;return}
+ if(G.i>=G.q.length){
+  if(!G.saved){G.saved=1;game.plays++;if(G.max>game.best)game.best=G.max;if(G.score>game.score)game.score=G.score;P("kw_game",game)}
+  h='<div class="card"><div class="ko" style="font-size:30px">'+(G.score>=8?'🏆':'👍')+' '+G.score+' / '+G.q.length+'</div><p class="mu">Best streak this game: '+G.max+' · Your record: '+game.best+'</p>';
+  if(G.missed.length){h+='<b>Review these words</b>'+G.missed.map(function(w){return '<div class="w"><div class="k">'+esc(w[0])+'</div><div class="m">'+esc(w[1])+'<br><span>'+esc(w[2])+'</span></div><button class="sp" data-s="'+esc(w[0])+'">🔊</button></div>'}).join("")}else{h+='<p class="mu">Perfect round! 🎉</p>'}
+  h+='<br><button class="big" id="ga">Play again</button></div>';el.innerHTML=h;
+  document.getElementById("ga").onclick=startGame;
+  el.querySelectorAll(".sp").forEach(function(b){b.onclick=function(){say(b.dataset.s)}});return}
+ var Q=G.q[G.i],w=Q.w;
+ h='<div class="mu" style="margin-bottom:8px">Round '+(G.i+1)+' / '+G.q.length+' · Score '+G.score+' · Streak '+G.streak+' 🔥</div><div class="card"><div class="ko">'+esc(w[0])+'</div><div class="row"><button class="sp" id="gsp" aria-label="Listen">🔊</button></div>';
+ Q.ch.forEach(function(c,k){var cl="ch";if(G.ans!=null){if(c[0]==w[0])cl+=" ok";else if(k==G.ans)cl+=" bad"}
+  h+='<button class="'+cl+'" data-k="'+k+'">'+esc(g1(c))+'<small>'+esc(n1(c))+'</small></button>'});
+ if(G.ans!=null){h+='<div class="mean"><div class="en">'+esc(w[1])+'</div><div class="ne">'+esc(w[2])+'</div></div><button class="big" id="gn">'+(G.i==G.q.length-1?'Finish':'Next ➡️')+'</button>'}
+ h+='</div>';el.innerHTML=h;
+ document.getElementById("gsp").onclick=function(){say(w[0])};
+ if(G.ans==null){el.querySelectorAll(".ch").forEach(function(b){b.onclick=function(){
+  var k=+b.dataset.k;G.ans=k;
+  if(Q.ch[k][0]==w[0]){G.score++;G.streak++;if(G.streak>G.max)G.max=G.streak}
+  else{G.streak=0;G.missed.push(w);rep[w[0]]=(rep[w[0]]||0)+1;save()}
+  gameTab()}})}
+ else{document.getElementById("gn").onclick=function(){G.i++;G.ans=null;gameTab()}}
+}
+
 function words(){return BASE.split("\n").map(function(l){return l.split("|")}).filter(function(a){return a.length>=3}).concat(custom)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 var voiceOK=true;
@@ -1243,9 +1596,10 @@ function stats(){
  h+='</div>';
  var hard=all.filter(function(w){return rep[w[0]]&&!known[w[0]]}).sort(function(a,b){return rep[b[0]]-rep[a[0]]}).slice(0,10);
  h+='<div class="card"><b>Hardest words (most repeated, not yet known)</b>'+(hard.length?hard.map(function(w){return '<div class="w"><div class="k">'+esc(w[0])+'</div><div class="m">'+esc(w[1])+'<br><span>'+esc(w[2])+'</span></div><span class="mu">×'+rep[w[0]]+'</span></div>'}).join(""):'<p class="mu" style="text-align:left">None yet. Words you press 🔁 Repeat on will appear here.</p>')+'</div>';
+ h+='<div class="card"><b>🎯 Word Hunt game</b><div class="stats" style="margin-top:8px"><div><b>'+game.best+'</b><span class="mu">Best streak</span></div><div><b>'+game.score+'/10</b><span class="mu">Best score</span></div><div><b>'+game.plays+'</b><span class="mu">Games</span></div></div></div>';
  document.getElementById("stats").innerHTML=h;
 }
-document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){document.querySelectorAll("nav button").forEach(function(x){x.classList.toggle("on",x==b)});["learn","list","rel","stats","add"].forEach(function(id){document.getElementById(id).classList.toggle("hide",id!=b.dataset.t)});if(b.dataset.t=="learn")learn();if(b.dataset.t=="list")list();if(b.dataset.t=="rel")relTab();if(b.dataset.t=="stats")stats()}});
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){document.querySelectorAll("nav button").forEach(function(x){x.classList.toggle("on",x==b)});["learn","list","rel","game","stats","add"].forEach(function(id){document.getElementById(id).classList.toggle("hide",id!=b.dataset.t)});if(b.dataset.t=="learn")learn();if(b.dataset.t=="list")list();if(b.dataset.t=="rel")relTab();if(b.dataset.t=="game")gameTab();if(b.dataset.t=="stats")stats()}});
 document.getElementById("addbtn").onclick=function(){
  var n=0,have={};words().forEach(function(w){have[w[0]]=1});
  document.getElementById("ta").value.split("\n").forEach(function(l){var a=l.split("|").map(function(x){return x.trim()});if(a.length>=3&&a[0]&&a[1]&&a[2]&&!have[a[0]]){custom.push(a.slice(0,3));have[a[0]]=1;n++}});
@@ -1254,9 +1608,9 @@ document.getElementById("addbtn").onclick=function(){
 document.getElementById("reset").onclick=function(){if(confirm("Reset all progress?")){known={};rep={};save();queue=null;document.getElementById("addmsg").textContent="Progress reset."}};
 
 function bm(t){document.getElementById("bkmsg").textContent=t}
-document.getElementById("bkshow").onclick=function(){document.getElementById("bk").value=JSON.stringify({v:1,known:known,rep:rep,custom:custom});bm("Backup ready. Tap Copy.")};
+document.getElementById("bkshow").onclick=function(){document.getElementById("bk").value=JSON.stringify({v:1,known:known,rep:rep,custom:custom,game:game});bm("Backup ready. Tap Copy.")};
 document.getElementById("bkcopy").onclick=function(){var t=document.getElementById("bk");if(!t.value)document.getElementById("bkshow").onclick();t.select();try{navigator.clipboard.writeText(t.value).then(function(){bm("Copied.")},function(){document.execCommand("copy");bm("Copied.")})}catch(e){try{document.execCommand("copy");bm("Copied.")}catch(x){bm("Select the text and copy it manually.")}}};
-document.getElementById("bkrest").onclick=function(){try{var d=JSON.parse(document.getElementById("bk").value);if(!d||typeof d.known!="object"||typeof d.rep!="object"||!Array.isArray(d.custom))throw 1;known=d.known;rep=d.rep;custom=d.custom.filter(function(a){return Array.isArray(a)&&a.length>=3});save();P("kw_custom",custom);queue=null;bm("Restored: "+Object.keys(known).length+" known words.")}catch(e){bm("That backup text is not valid.")}};
+document.getElementById("bkrest").onclick=function(){try{var d=JSON.parse(document.getElementById("bk").value);if(!d||typeof d.known!="object"||typeof d.rep!="object"||!Array.isArray(d.custom))throw 1;known=d.known;rep=d.rep;if(d.game&&typeof d.game=="object"){game=d.game;P("kw_game",game)}custom=d.custom.filter(function(a){return Array.isArray(a)&&a.length>=3});save();P("kw_custom",custom);queue=null;bm("Restored: "+Object.keys(known).length+" known words.")}catch(e){bm("That backup text is not valid.")}};
 try{speechSynthesis.onvoiceschanged=function(){}}catch(e){}
 learn();
 </script></main><script>if("serviceWorker" in navigator&&location.protocol.indexOf("http")==0){navigator.serviceWorker.register("sw.js").catch(function(){})}</script></body></html>
