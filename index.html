@@ -30,6 +30,7 @@ input[type=text],select,textarea{width:100%;padding:10px;border:1px solid var(--
 .sm{padding:9px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font-size:13px}
 .set{display:flex;align-items:center;gap:8px;font-size:13px;margin:6px 0}.set .bar{flex:1}
 .hide{display:none}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px}.mbox{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:16px;padding:18px;max-width:420px;width:100%;max-height:90vh;overflow:auto}.mbox p{font-size:13.5px;line-height:1.55;margin:8px 0}.mbox input{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit;margin:6px 0 10px}
 .top{display:flex;align-items:center;gap:8px}.top h1{flex:1}
 .seg{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}.seg button{flex:1;min-width:54px;padding:9px 6px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-size:13px}.seg button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 .sub{color:var(--mu);font-size:13px;margin:8px 0 0}
@@ -57,6 +58,7 @@ nav{gap:4px}nav button{font-size:12px;padding:10px 2px}
  <div class="card"><b>Backup / restore progress</b><p class="mu" style="text-align:left">Tap Show backup, copy the text, and keep it safe (notes, WhatsApp). Paste it here later and tap Restore.</p><textarea id="bk" rows="4"></textarea><div class="row"><button class="sm" id="bkshow">Show backup</button><button class="sm" id="bkcopy">Copy</button><button class="sm" id="bkrest">Restore</button></div><p class="mu" id="bkmsg"></p></div>
 </section>
 
+<script src="sync-config.js"></script>
 <script>
 var BASE=`가격|price|मूल्य
 경험|experience|अनुभव
@@ -1525,6 +1527,7 @@ function settingsTab(){
  h+='<div class="card"><b>🔊 Sound</b><p class="sub">Play the word when I tap Show meaning</p>'+sw("autoSpeak")+'<p class="sub">Speaking speed</p>'+seg("rate",[[0.6,"Slow"],[0.8,"Normal"],[1,"Fast"]],"n")+'<button class="sm" data-a="snd">▶️ Test sound</button></div>';
  h+='<div class="card"><b>🎯 Word Hunt game</b><p class="sub">Rounds per game</p>'+seg("rounds",[[5,"5"],[10,"10"],[15,"15"],[20,"20"]],"n")+'<p class="sub">Vibrate on answers</p>'+sw("vibe")+'<p class="sub">Beep sounds on answers</p>'+sw("beep")+'</div>';
  h+='<div class="card"><b>📅 Daily goal</b><p class="sub">Words to mark as known each day</p>'+seg("goal",[[0,"Off"],[5,"5"],[10,"10"],[20,"20"],[30,"30"]],"n")+'<p class="mu" style="text-align:left">Today: '+(log[dkey(new Date())]||0)+' · 🔥 '+dayStreak()+'-day streak. See it in Analyze.</p></div>';
+ h+=privacyCard();
  h+='<div class="card"><b>🧹 Data</b><p class="mu" style="text-align:left">These buttons ask before doing anything.</p><div class="seg"><button data-a="rs">Restart current set</button><button data-a="rh">Clear hardest words</button><button data-a="rg">Reset game record</button></div></div>';
  h+='<div class="card"><b>ℹ️ About</b><p class="mu" style="text-align:left">'+all.length+' words · '+setsInfo().length+' sets · '+Object.keys(RELS).length+' words with similar/opposite words<br>Your data is saved only on this device. Use Add → Backup to keep a copy.</p><button class="sm" data-a="df">Restore default settings</button></div>';
  el.innerHTML=h;el.onclick=settingsClick;
@@ -1536,7 +1539,12 @@ function settingsClick(e){
   else if(x=="rg"){if(confirm("Reset your Word Hunt record?")){game={best:0,score:0,plays:0,pct:0};P("kw_game",game);note("Game record reset ✅")}}
   else if(x=="rh"){if(confirm("Clear the repeat counts of all words?")){rep={};save();note("Hardest words cleared ✅")}}
   else if(x=="rs"){if(confirm("Mark every word in Set "+(activeSet()+1)+" as not known?")){setsInfo()[activeSet()].forEach(function(w){delete known[w[0]]});save();queue=null;note("Set "+(activeSet()+1)+" restarted ✅")}}
+  else if(x=="shon"){if(!share.nick){showConsent();return}share.on=true;share.id=share.id||rid();share.asked=true;P("kw_share",share);syncNow(true);settingsTab();return}
+  else if(x=="shoff"){share.on=false;P("kw_share",share);settingsTab();return}
+  else if(x=="shnick"){var nv=(document.getElementById("snick").value||"").trim().slice(0,20);if(nv.length<2){note("Nickname needs 2-20 characters");return}share.nick=nv;P("kw_share",share);syncNow(true);note("Nickname saved ✅");return}
+  else if(x=="shdel"){if(confirm("Delete your shared data from the owner's sheet and stop sharing?")){post({action:"delete",id:share.id});share.on=false;share.id="";P("kw_share",share);note("Delete request sent. Sharing is off.");settingsTab()}return}
   else if(x=="df"){if(confirm("Restore default settings?")){cfg=Object.assign({},DEF);chosenSet=-1;P("kw_set",-1);queue=null;P("kw_cfg",cfg);applyCfg();settingsTab()}}
+
   return}
  var b=e.target.closest?e.target.closest("[data-k]"):null;if(!b)return;
  var k=b.dataset.k,v=b.dataset.v,t=b.dataset.t;
@@ -1544,6 +1552,32 @@ function settingsClick(e){
  if(k=="setSize"){chosenSet=-1;P("kw_set",-1);queue=null}
  if(k=="order")queue=null;
  P("kw_cfg",cfg);applyCfg();settingsTab()}
+
+var APP_VER="2.0";
+var SYNC_URL=(typeof window!=="undefined"&&window.SYNC_URL)||"";
+var share=S("kw_share",{asked:false,on:false,nick:"",id:"",last:0});
+function rid(){var c="abcdefghijkmnpqrstuvwxyz23456789",t="";for(var i=0;i<12;i++)t+=c.charAt(Math.floor(Math.random()*c.length));return t}
+function payload(){var all=words(),kn=all.filter(function(w){return known[w[0]]}).length,cs=curSet();
+ var hard=Object.keys(rep).filter(function(k){return !known[k]}).sort(function(a,b){return rep[b]-rep[a]}).slice(0,10);
+ return {action:"report",id:share.id,nick:share.nick,ver:APP_VER,known:kn,total:all.length,curSet:cs<0?setsInfo().length:cs+1,streak:dayStreak(),bestStreak:game.best,gamePct:game.pct,plays:game.plays,today:log[dkey(new Date())]||0,hard:hard}}
+function post(o){try{fetch(SYNC_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o),keepalive:true}).catch(function(){})}catch(e){}}
+function syncNow(force){if(!SYNC_URL||!share.on||!share.id||!share.nick)return;var t=Date.now();if(!force&&t-share.last<300000)return;share.last=t;P("kw_share",share);post(payload())}
+function showConsent(){
+ if(document.getElementById("consent"))return;
+ var m=document.createElement("div");m.className="modal";m.id="consent";
+ m.innerHTML='<div class="mbox"><b style="font-size:17px">Share your progress? 🤝</b><p>This app is free for everyone. The app owner would like to see how many people use it and how they are doing, so the words can be improved.</p><p><b>If you tap Yes, the owner sees only:</b> your nickname, how many words you know, your current set, your day streak, your game score and your 10 hardest words.</p><p>Nothing else is sent: no real name, phone number, contacts or location. You can stop sharing or delete your data any time in ⚙️ Settings → Privacy.</p><input type="text" id="cnick" maxlength="20" placeholder="Choose a nickname (not your real name)"><button class="big ok" id="cyes">Yes, share my progress</button><button class="big" id="cno" style="background:var(--mu);margin-top:8px">No thanks</button></div>';
+ document.body.appendChild(m);
+ document.getElementById("cyes").onclick=function(){var v=document.getElementById("cnick").value.trim().slice(0,20);if(v.length<2){note("Please choose a nickname with 2-20 letters");return}share.nick=v;share.id=share.id||rid();share.on=true;share.asked=true;P("kw_share",share);m.remove();syncNow(true);note("Thank you! 🙏")};
+ document.getElementById("cno").onclick=function(){share.asked=true;share.on=false;P("kw_share",share);m.remove()};
+}
+function privacyCard(){
+ var h='<div class="card"><b>🔒 Privacy · share my progress</b>';
+ if(!SYNC_URL)return h+'<p class="mu" style="text-align:left">Sharing is not set up in this version. Nothing is sent anywhere.</p></div>';
+ h+='<p class="mu" style="text-align:left">If you turn this on, the app owner sees your nickname, words known, current set, day streak, game score and your 10 hardest words. Nothing else is sent.</p>';
+ h+='<div class="seg"><button data-a="shon" class="'+(share.on?'on':'')+'">On</button><button data-a="shoff" class="'+(share.on?'':'on')+'">Off</button></div>';
+ if(share.on||share.nick)h+='<p class="sub">Nickname</p><input type="text" id="snick" maxlength="20" value="'+esc(share.nick)+'"><button class="sm" data-a="shnick">Save nickname</button> ';
+ if(share.id)h+='<button class="sm" data-a="shdel">Delete my shared data</button>';
+ return h+'</div>'}
 
 var game=S("kw_game",{best:0,score:0,plays:0}),G=null;
 if(game.pct==null)game.pct=(game.score||0)*10;
@@ -1571,7 +1605,7 @@ function gameTab(){
   el.innerHTML='<div class="card"><div class="ko" style="font-size:30px">🎯 Word Hunt</div><p class="mu">'+cfg.rounds+' rounds per game. Pick the right meaning. Words come from your current set (Set '+(activeSet()+1)+'), in order. Your best streak is saved on this device.</p><div class="stats"><div><b>'+game.best+'</b><span class="mu">Best streak</span></div><div><b>'+game.pct+'%</b><span class="mu">Best score</span></div><div><b>'+game.plays+'</b><span class="mu">Games</span></div></div><br><button class="big" id="gs">Start game</button><p class="mu">Wrong answers are added to your hardest words. The game does not mark words as known.</p></div>';
   document.getElementById("gs").onclick=startGame;return}
  if(G.i>=G.q.length){
-  if(!G.saved){G.saved=1;game.plays++;if(G.max>game.best)game.best=G.max;var pc=Math.round(G.score/G.q.length*100);if(pc>game.pct)game.pct=pc;P("kw_game",game)}
+  if(!G.saved){G.saved=1;game.plays++;if(G.max>game.best)game.best=G.max;var pc=Math.round(G.score/G.q.length*100);if(pc>game.pct)game.pct=pc;P("kw_game",game);syncNow()}
   h='<div class="card"><div class="ko" style="font-size:30px">'+(G.score/G.q.length>=.8?'🏆':'👍')+' '+G.score+' / '+G.q.length+'</div><p class="mu">Best streak this game: '+G.max+' · Your record: '+game.best+'</p>';
   if(G.missed.length){h+='<b>Review these words</b>'+G.missed.map(function(w){return '<div class="w"><div class="k">'+esc(w[0])+'</div><div class="m">'+esc(w[1])+'<br><span>'+esc(w[2])+'</span></div><button class="sp" data-s="'+esc(w[0])+'">🔊</button></div>'}).join("")}else{h+='<p class="mu">Perfect round! 🎉</p>'}
   h+='<br><div class="row"><button class="big" id="gb" style="background:var(--mu)">⬅️ Previous</button><button class="big" id="ga">Play again</button></div></div>';el.innerHTML=h;
@@ -1653,7 +1687,7 @@ function learn(){
  }else{
   if(!shown){
    document.getElementById("show").onclick=function(){shown=true;learn();if(cfg.autoSpeak)say(w[0],true)};
-   document.getElementById("kw").onclick=function(){known[w[0]]=true;bump();pushHist(w,"k");queue.shift();shown=false;save();note("");learn()};
+   document.getElementById("kw").onclick=function(){known[w[0]]=true;bump();syncNow();pushHist(w,"k");queue.shift();shown=false;save();note("");learn()};
   }else{
    document.getElementById("nx").onclick=function(){pushHist(w,"n");queue.shift();queue.splice(Math.min(queue.length,cfg.skipGap),0,w);shown=false;note("");learn()};
    document.getElementById("rp").onclick=function(){rep[w[0]]=(rep[w[0]]||0)+1;queue.shift();queue.splice(Math.min(queue.length,cfg.repGap),0,w);pushHist(w,"r");shown=false;save();note("");learn()};
@@ -1696,5 +1730,7 @@ document.getElementById("vn").onclick=function(e){if(!e.target||e.target.tagName
 document.getElementById("gear").onclick=function(){document.querySelectorAll("nav button").forEach(function(x){x.classList.remove("on")});["learn","list","rel","game","stats","add","settings"].forEach(function(id){document.getElementById(id).classList.toggle("hide",id!="settings")});settingsTab()};
 try{speechSynthesis.onvoiceschanged=function(){}}catch(e){}
 applyCfg();
+syncNow();try{document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")syncNow()})}catch(e){}
+if(SYNC_URL&&!share.asked)setTimeout(showConsent,800);
 learn();
 </script></main><script>if("serviceWorker" in navigator&&location.protocol.indexOf("http")==0){navigator.serviceWorker.register("sw.js").catch(function(){})}</script></body></html>
